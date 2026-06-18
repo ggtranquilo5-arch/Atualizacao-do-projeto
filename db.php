@@ -1,8 +1,16 @@
 <?php
-$host = 'localhost';
-$dbname = 'almoxarifado';
-$user = 'root';
-$pass = ''; 
+// Detecta se está rodando localmente (XAMPP) ou na InfinityFree
+if ($_SERVER['HTTP_HOST'] == 'localhost' || $_SERVER['HTTP_HOST'] == '127.0.0.1') {
+    $host = '127.0.0.1';
+    $dbname = 'almoxarifado';
+    $user = 'root';
+    $pass = ''; 
+} else {
+    $host = 'sql101.infinityfree.com';
+    $dbname = 'if0_42166310_Almoxarifado';
+    $user = 'if0_42166310';
+    $pass = 'Joaquim2425';
+}
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $user, $pass);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);

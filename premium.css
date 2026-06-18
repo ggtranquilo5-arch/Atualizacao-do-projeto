@@ -190,3 +190,84 @@ body.dark-mode ::-webkit-scrollbar-thumb {
 body.dark-mode ::-webkit-scrollbar-thumb:hover {
     background: #475569;
 }
+
+/* ==== OTIMIZAÇÕES MOBILE (CORREÇÃO DE BUGS VISUAIS) ==== */
+@media (max-width: 768px) {
+    /* Topbar geral (todas as páginas) */
+    .topbar {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 15px !important;
+        margin-top: 60px !important; /* Espaço para o botão menu */
+        padding: 15px !important;
+    }
+    
+    /* Área de usuário do dashboard */
+    .usuario {
+        width: 100% !important;
+        margin-top: 5px !important;
+    }
+    .usuario > div {
+        width: 100% !important;
+        box-sizing: border-box;
+    }
+    
+    /* Barra de pesquisa (Produtos/Estoque) */
+    .topbar form {
+        width: 100% !important;
+        flex-direction: column !important;
+        align-items: stretch !important;
+    }
+    .topbar input {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+    .topbar button {
+        width: 100% !important;
+    }
+    
+    /* Espaçamentos principais */
+    .main {
+        padding: 15px !important;
+        width: 100% !important;
+        overflow-x: hidden !important;
+    }
+    
+    /* Correção do Menu Lateral (Sidebar) sobrepondo */
+    .sidebar {
+        width: 260px !important;
+        left: -260px !important;
+        z-index: 10001 !important;
+    }
+    .sidebar.active {
+        left: 0 !important;
+        box-shadow: 10px 0 30px rgba(0,0,0,0.5) !important;
+    }
+    
+    /* Fundo escuro quando a sidebar abre (overlay) */
+    .sidebar-overlay {
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.5);
+        z-index: 10000;
+        display: none;
+    }
+    .sidebar-overlay.active {
+        display: block;
+    }
+
+    /* Grids dos forms */
+    .form-grid, .grid-forms {
+        grid-template-columns: 1fr !important;
+    }
+    
+    /* Tabelas com scroll no mobile */
+    .table-container table {
+        min-width: 600px !important;
+    }
+    .table-container {
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch;
+    }
+}
