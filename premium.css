@@ -298,22 +298,29 @@ html, body {
     }
     
     /* Correção de botões de ação nas tabelas (Cluster compacto em vez de torre gigante) */
-    table td form, table td div, table td[style*="display: flex"] {
+    table td.acoes, table td form, table td div, table td[style*="display: flex"] {
         display: flex !important;
         flex-direction: row !important;
         flex-wrap: wrap !important;
-        gap: 4px !important;
+        gap: 6px !important;
         align-items: center !important;
+        justify-content: flex-start !important;
     }
-    table td a, table td button {
+    table td a, table td button, .acoes a {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
         width: auto !important;
         text-align: center !important;
         box-sizing: border-box !important;
         white-space: nowrap !important;
         margin: 0 !important;
-        padding: 5px 8px !important;
+        padding: 6px 10px !important;
         font-size: 0.75rem !important;
+        border-radius: 6px !important;
+        line-height: 1.2 !important;
     }
+
     
     /* Correção do Menu Lateral (Sidebar) sobrepondo */
     .sidebar {
