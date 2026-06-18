@@ -311,12 +311,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     }
 }
 
-if (isset($_SESSION['nivel_acesso']) && $_SESSION['nivel_acesso'] === 'admin') {
-    $stmtComandos = $pdo->query("SELECT comando as cmd, descricao as `desc`, icone as icon, cor FROM ia_comandos ORDER BY comando ASC");
-} else {
-    $stmtComandos = $pdo->query("SELECT comando as cmd, descricao as `desc`, icone as icon, cor FROM ia_comandos WHERE nivel_acesso = 'comum' ORDER BY comando ASC");
+try {
+    if (isset($_SESSION['nivel_acesso']) && $_SESSION['nivel_acesso'] === 'admin') {
+        $stmtComandos = $pdo->query("SELECT comando as cmd, descricao as `desc`, icone as icon, cor FROM ia_comandos ORDER BY comando ASC");
+    } else {
+        $stmtComandos = $pdo->query("SELECT comando as cmd, descricao as `desc`, icone as icon, cor FROM ia_comandos WHERE nivel_acesso = 'comum' ORDER BY comando ASC");
+    }
+    $comandos_db = $stmtComandos->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    // Fallback caso a tabela ia_comandos não exista
+    $comandos_db = [
+        ['cmd' => '/ajuda', 'desc' => 'Mostra a lista de todos os comandos', 'icon' => 'fa-question-circle', 'color' => '#a8c7fa'],
+        ['cmd' => '/adicionar', 'desc' => 'Adiciona quantidade ao estoque (Ex: /adicionar 5 mouse)', 'icon' => 'fa-plus', 'color' => '#10b981'],
+        ['cmd' => '/remover', 'desc' => 'Remove quantidade do estoque (Ex: /remover 2 teclado)', 'icon' => 'fa-minus', 'color' => '#ef4444'],
+        ['cmd' => '/estoque', 'desc' => 'Consulta o estoque de um produto', 'icon' => 'fa-box', 'color' => '#f59e0b'],
+        ['cmd' => '/historico', 'desc' => 'Ver histórico de entradas e saídas de um produto', 'icon' => 'fa-history', 'color' => '#3b82f6'],
+        ['cmd' => '/status', 'desc' => 'Status geral do almoxarifado', 'icon' => 'fa-server', 'color' => '#a8c7fa'],
+        ['cmd' => '/alertas', 'desc' => 'Lista itens com estoque baixo/zerado', 'icon' => 'fa-exclamation-triangle', 'color' => '#ef4444'],
+        ['cmd' => '/valor', 'desc' => 'Calcula o valor total em dinheiro no estoque', 'icon' => 'fa-dollar-sign', 'color' => '#10b981'],
+        ['cmd' => '/vendidos', 'desc' => 'Ver total geral de itens já despachados', 'icon' => 'fa-chart-line', 'color' => '#a8c7fa'],
+        ['cmd' => '/entradas', 'desc' => 'Exibir as últimas 5 entradas no sistema', 'icon' => 'fa-arrow-down', 'color' => '#10b981'],
+        ['cmd' => '/saidas', 'desc' => 'Exibir as últimas 5 saídas do sistema', 'icon' => 'fa-arrow-up', 'color' => '#ef4444'],
+        ['cmd' => '/fornecedores', 'desc' => 'Listar contatos dos fornecedores', 'icon' => 'fa-truck', 'color' => '#f59e0b'],
+        ['cmd' => '/comprar', 'desc' => 'Pesquisar preços no Mercado Livre (Ex: /comprar papel)', 'icon' => 'fa-shopping-cart', 'color' => '#eab308'],
+        ['cmd' => '/pesquisar', 'desc' => 'Buscar informações na Wikipedia (Ex: /pesquisar cpu)', 'icon' => 'fa-globe', 'color' => '#3b82f6']
+    ];
+    if (isset($_SESSION['nivel_acesso']) && $_SESSION['nivel_acesso'] === 'admin') {
+        $comandos_db = array_merge($comandos_db, [
+            ['cmd' => '/banir', 'desc' => 'Banir um usuário do sistema', 'icon' => 'fa-gavel', 'color' => '#ef4444'],
+            ['cmd' => '/desbanir', 'desc' => 'Desbanir um usuário', 'icon' => 'fa-unlock', 'color' => '#10b981'],
+            ['cmd' => '/usuarios', 'desc' => 'Lista todos os jogadores/usuários', 'icon' => 'fa-users', 'color' => '#a8c7fa'],
+            ['cmd' => '/promover', 'desc' => 'Promover um usuário a Admin', 'icon' => 'fa-star', 'color' => '#f59e0b'],
+            ['cmd' => '/rebaixar', 'desc' => 'Rebaixar Admin para Comum', 'icon' => 'fa-arrow-down', 'color' => '#ef4444'],
+            ['cmd' => '/deletar', 'desc' => 'Deleta um produto permanentemente', 'icon' => 'fa-trash', 'color' => '#ef4444']
+        ]);
+    }
 }
-$comandos_db = $stmtComandos->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -325,7 +355,7 @@ $comandos_db = $stmtComandos->fetchAll(PDO::FETCH_ASSOC);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IA Gerencial Avançada | ALMOX</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="premium.css?v=1781792984">
+    <link rel="stylesheet" href="premium.css?v=1781805092">
     <style>
         :root {
             --ia-bg: #131314;

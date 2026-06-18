@@ -268,6 +268,24 @@ html, body {
         width: 100% !important;
         box-sizing: border-box !important;
         margin-bottom: 10px;
+        font-size: 0.85rem !important;
+        padding: 10px !important;
+    }
+
+    /* Redução geral de fontes no celular para organizar melhor */
+    body { font-size: 0.85rem !important; }
+    h1 { font-size: 1.3rem !important; }
+    h2 { font-size: 1.1rem !important; }
+    h3 { font-size: 0.95rem !important; }
+    
+    table th, table td {
+        font-size: 0.8rem !important;
+        padding: 8px !important;
+    }
+    
+    button {
+        font-size: 0.9rem !important;
+        padding: 10px !important;
     }
     
     /* Tabelas com scroll no mobile */
@@ -278,6 +296,6 @@ html, body {
         -webkit-overflow-scrolling: touch;
     }
     .table-container table {
-        min-width: 600px !important;
+        min-width: 500px !important;
     }
 }
