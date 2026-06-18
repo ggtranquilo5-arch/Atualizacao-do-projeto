@@ -255,10 +255,64 @@ html, body {
     
     /* Espaçamentos principais */
     .main {
-        padding: 15px !important;
+        padding: 10px !important;
+        padding-top: 65px !important;
         width: 100% !important;
         box-sizing: border-box !important;
         overflow-x: hidden !important;
+    }
+    
+    /* Menu lateral toggle flutuante - alterado para absolute para sumir no scroll e não sobrepor tabela */
+    .menu-toggle {
+        position: absolute !important;
+        top: 15px !important;
+        left: 15px !important;
+        width: 40px !important;
+        height: 40px !important;
+        font-size: 18px !important;
+        padding: 0 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+
+    /* Compactação total de elementos para ganhar espaço na tela */
+    .form-grid input, .form-grid select, .grid-forms input, .grid-forms select {
+        width: 100% !important;
+        box-sizing: border-box !important;
+        margin-bottom: 8px !important;
+        font-size: 0.85rem !important;
+        padding: 8px !important;
+    }
+
+    /* Redução geral de fontes no celular para organizar melhor */
+    body { font-size: 0.8rem !important; }
+    h1 { font-size: 1.15rem !important; }
+    h2 { font-size: 1rem !important; }
+    h3 { font-size: 0.9rem !important; }
+    
+    /* Deixando tabelas e espaçamentos das linhas BEM compactos */
+    table th, table td {
+        font-size: 0.75rem !important;
+        padding: 5px 6px !important;
+    }
+    
+    /* Correção de botões de ação nas tabelas (Cluster compacto em vez de torre gigante) */
+    table td form, table td div, table td[style*="display: flex"] {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: wrap !important;
+        gap: 4px !important;
+        align-items: center !important;
+    }
+    table td a, table td button {
+        width: auto !important;
+        text-align: center !important;
+        box-sizing: border-box !important;
+        white-space: nowrap !important;
+        margin: 0 !important;
+        padding: 5px 8px !important;
+        font-size: 0.75rem !important;
     }
     
     /* Correção do Menu Lateral (Sidebar) sobrepondo */
@@ -279,30 +333,7 @@ html, body {
         width: 100% !important;
     }
     
-    .form-grid input, .form-grid select, .grid-forms input, .grid-forms select {
-        width: 100% !important;
-        box-sizing: border-box !important;
-        margin-bottom: 10px;
-        font-size: 0.85rem !important;
-        padding: 10px !important;
-    }
 
-    /* Redução geral de fontes no celular para organizar melhor */
-    body { font-size: 0.85rem !important; }
-    h1 { font-size: 1.3rem !important; }
-    h2 { font-size: 1.1rem !important; }
-    h3 { font-size: 0.95rem !important; }
-    
-    table th, table td {
-        font-size: 0.8rem !important;
-        padding: 8px !important;
-    }
-    
-    button {
-        font-size: 0.9rem !important;
-        padding: 10px !important;
-    }
-    
     /* Tabelas com scroll no mobile */
     .table-container {
         width: 100% !important;
