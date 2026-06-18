@@ -1,4 +1,4 @@
-<?php s
+<?php
 session_start();
 require 'db.php';
 if (!isset($_SESSION['usuario_id'])) {
@@ -328,6 +328,7 @@ $totalAdmins = array_reduce($usuarios, function($carry, $usr) { return $carry + 
                                 <?php else: ?>
                                     <a href="usuarios.php?banir_usuario=<?= $usr['id'] ?>&status=ativo" onclick="return confirm('Deseja banir <?= htmlspecialchars($usr['nome']) ?>?');" style="color:#f59e0b; text-decoration:none; font-weight:bold; font-size: 13px; display:inline-block; padding: 6px 12px; background: #fef3c7; border-radius: 6px;"><i class="fa fa-ban"></i> Banir</a>
                                 <?php endif; ?>
+                                <a href="usuarios.php?redefinir_senha=<?= $usr['id'] ?>" onclick="return confirm('Redefinir a senha para 123456?');" style="color:#8b5cf6; text-decoration:none; font-weight:bold; font-size: 13px; display:inline-block; padding: 6px 12px; background: #ede9fe; border-radius: 6px;"><i class="fa fa-key"></i> Senha</a>
                                 <a href="usuarios.php?excluir_usuario=<?= $usr['id'] ?>" onclick="return confirm('Deseja realmente excluir <?= htmlspecialchars($usr['nome']) ?> permanentemente?');" style="color:#ef4444; text-decoration:none; font-weight:bold; font-size: 13px; display:inline-block; padding: 6px 12px; background: #fef2f2; border-radius: 6px;"><i class="fa fa-trash"></i> Excluir</a>
                             <?php else: ?>
                                 <span style="color:#94a3b8; font-size:13px; font-weight: bold;"><i class="fa fa-user-check"></i> Você</span>
