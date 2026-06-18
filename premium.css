@@ -192,14 +192,24 @@ body.dark-mode ::-webkit-scrollbar-thumb:hover {
 }
 
 /* ==== OTIMIZAÇÕES MOBILE (CORREÇÃO DE BUGS VISUAIS) ==== */
+html, body {
+    overflow-x: hidden !important;
+    width: 100%;
+    max-width: 100vw;
+}
+
 @media (max-width: 768px) {
     /* Topbar geral (todas as páginas) */
     .topbar {
         flex-direction: column !important;
-        align-items: flex-start !important;
+        align-items: stretch !important;
         gap: 15px !important;
         margin-top: 60px !important; /* Espaço para o botão menu */
         padding: 15px !important;
+    }
+    
+    .topbar h1 {
+        font-size: 1.4rem !important;
     }
     
     /* Área de usuário do dashboard */
@@ -225,12 +235,14 @@ body.dark-mode ::-webkit-scrollbar-thumb:hover {
     }
     .topbar button {
         width: 100% !important;
+        margin-top: 10px !important;
     }
     
     /* Espaçamentos principais */
     .main {
         padding: 15px !important;
         width: 100% !important;
+        box-sizing: border-box !important;
         overflow-x: hidden !important;
     }
     
@@ -244,30 +256,28 @@ body.dark-mode ::-webkit-scrollbar-thumb:hover {
         left: 0 !important;
         box-shadow: 10px 0 30px rgba(0,0,0,0.5) !important;
     }
-    
-    /* Fundo escuro quando a sidebar abre (overlay) */
-    .sidebar-overlay {
-        position: fixed;
-        top: 0; left: 0; width: 100%; height: 100%;
-        background: rgba(0,0,0,0.5);
-        z-index: 10000;
-        display: none;
-    }
-    .sidebar-overlay.active {
-        display: block;
-    }
 
-    /* Grids dos forms */
-    .form-grid, .grid-forms {
-        grid-template-columns: 1fr !important;
+    /* Grids dos forms (Impede que 2 inputs de 200px vazem a tela de 390px) */
+    .form-grid, .grid-forms, .cards, .dashboard-grid {
+        display: flex !important;
+        flex-direction: column !important;
+        width: 100% !important;
+    }
+    
+    .form-grid input, .form-grid select, .grid-forms input, .grid-forms select {
+        width: 100% !important;
+        box-sizing: border-box !important;
+        margin-bottom: 10px;
     }
     
     /* Tabelas com scroll no mobile */
-    .table-container table {
-        min-width: 600px !important;
-    }
     .table-container {
+        width: 100% !important;
+        box-sizing: border-box !important;
         overflow-x: auto !important;
         -webkit-overflow-scrolling: touch;
+    }
+    .table-container table {
+        min-width: 600px !important;
     }
 }
