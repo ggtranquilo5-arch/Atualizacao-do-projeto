@@ -146,7 +146,7 @@ $totalAdmins = array_reduce($usuarios, function($carry, $usr) { return $carry + 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestão de Usuários - ALMOX</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="premium.css?v=1781805092">
+    <link rel="stylesheet" href="premium.css?v=1781808615">
     <style>
         *{ margin:0; padding:0; box-sizing:border-box; font-family: 'Inter', sans-serif; }
         body{ background:#f1f5f9; color: #1e293b; transition: background 0.3s; }
