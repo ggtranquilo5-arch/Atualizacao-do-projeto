@@ -299,14 +299,7 @@ body {
         box-sizing: border-box !important;
     }
 
-    /* Fix para o Indicador Live Sync não sobrepor os itens */
-    #live-indicator {
-        position: static !important;
-        align-self: flex-end !important;
-        order: -1 !important;
-        margin-bottom: 5px !important;
-        margin-top: 0 !important;
-    }
+
 
     .usuario {
         width: 100% !important;

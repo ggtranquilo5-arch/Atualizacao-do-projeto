@@ -161,17 +161,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Indicador visual de Live
     const topbar = document.querySelector('.topbar');
-    if (topbar && !document.getElementById('live-indicator')) {
-        const indicator = document.createElement('div');
+    const titleH1 = topbar ? topbar.querySelector('h1') : null;
+    if (titleH1 && !document.getElementById('live-indicator')) {
+        const indicator = document.createElement('span');
         indicator.id = 'live-indicator';
-        indicator.innerHTML = '<span style="display:inline-block; width:10px; height:10px; border-radius:50%; background:#10b981; box-shadow: 0 0 8px #10b981; animation: pulse 2s infinite; margin-right:5px;"></span><span style="font-size:12px; color:#64748b; font-weight:bold;">Sincronização Ativa</span>';
-        indicator.style.position = 'absolute';
-        indicator.style.top = '10px';
-        indicator.style.right = '15px';
-        indicator.style.display = 'flex';
+        indicator.innerHTML = '<span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#10b981; box-shadow: 0 0 8px #10b981; animation: pulse 2s infinite; margin-right:5px;"></span><span style="font-size:11px; color:#10b981; font-weight:bold; letter-spacing: 0.5px;">AO VIVO</span>';
+        indicator.style.display = 'inline-flex';
         indicator.style.alignItems = 'center';
-        topbar.style.position = 'relative';
-        topbar.appendChild(indicator);
+        indicator.style.marginLeft = '15px';
+        indicator.style.verticalAlign = 'middle';
+        indicator.style.backgroundColor = 'rgba(16, 185, 129, 0.1)';
+        indicator.style.padding = '4px 10px';
+        indicator.style.borderRadius = '12px';
+        indicator.style.border = '1px solid rgba(16, 185, 129, 0.2)';
+        indicator.style.textTransform = 'uppercase';
+        titleH1.appendChild(indicator);
         
         if (!document.getElementById('live-sync-style')) {
             const style = document.createElement('style');
