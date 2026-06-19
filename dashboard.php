@@ -71,12 +71,6 @@ body{ background:#f1f5f9; }
 .topbar{ background:white; padding:15px 20px; border-radius:10px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 2px 5px rgba(0,0,0,0.1); margin-bottom: 25px; }
 .usuario{ display:flex; align-items:center; gap:10px; }
 .usuario img{ width:45px; height:45px; border-radius:50%; }
-.cards{ display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:20px; margin-top:25px; }
-.card{ background:white; padding:20px; border-radius:12px; box-shadow:0 2px 5px rgba(0,0,0,0.1); transition:0.3s; }
-.card:hover{ transform:translateY(-5px); }
-.card i{ font-size:35px; color:#2563eb; margin-bottom:15px; }
-.card h3{ color:#64748b; }
-.card p{ margin-top:10px; font-size:28px; font-weight:bold; }
 .dashboard-grid{ margin-top:30px; display:grid; grid-template-columns:2fr 1fr; gap:20px; }
 .chart-box, .activity-box{ background:white; padding:20px; border-radius:12px; box-shadow:0 2px 5px rgba(0,0,0,0.1); }
 .chart{ margin-top:20px; }
@@ -123,7 +117,7 @@ table th{ background:#e2e8f0; }
         body.dark-mode .alert-error { background: #450a0a; border-color: #7f1d1d; color: #fca5a5; }
         body.dark-mode .alert-success { background: #052e16; border-color: #14532d; color: #86efac; }
 </style>
-    <link rel="stylesheet" href="premium.css">
+    <link rel="stylesheet" href="premium.css?v=<?= time() ?>">
 </head>
 <body>
 <style>

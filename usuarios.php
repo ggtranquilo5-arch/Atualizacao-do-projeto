@@ -146,7 +146,7 @@ $totalAdmins = array_reduce($usuarios, function($carry, $usr) { return $carry + 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestão de Usuários - ALMOX</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="premium.css">
+    <link rel="stylesheet" href="premium.css?v=<?= time() ?>">
     <style>
         *{ margin:0; padding:0; box-sizing:border-box; font-family: 'Inter', sans-serif; }
         body{ background:#f1f5f9; color: #1e293b; transition: background 0.3s; }
@@ -161,10 +161,7 @@ $totalAdmins = array_reduce($usuarios, function($carry, $usr) { return $carry + 
         .menu a:hover{ background:#1e293b; }
         .main{ width:100%; padding:20px; transition: 0.4s; }
         .topbar{ background:white; padding:15px 20px; border-radius:10px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 2px 5px rgba(0,0,0,0.1); margin-bottom: 25px; }
-        .cards{ display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:20px; margin-top:25px; }
-        .card{ background:white; padding:20px; border-radius:12px; box-shadow:0 2px 5px rgba(0,0,0,0.1); }
-        .card h3{ color:#64748b; }
-        .card p{ margin-top:10px; font-size:28px; font-weight:bold; color: #2563eb;}
+
         .table-container{ margin-top:30px; background:white; padding:20px; border-radius:12px; box-shadow:0 2px 5px rgba(0,0,0,0.1); overflow-x:auto;}
         table{ width:100%; border-collapse:collapse; margin-top:20px; min-width:600px;}
         table th, table td{ padding:12px; border-bottom:1px solid #f1f5f9; text-align:left; }
