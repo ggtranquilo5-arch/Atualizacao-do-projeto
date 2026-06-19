@@ -194,12 +194,14 @@ body.dark-mode ::-webkit-scrollbar-thumb:hover {
 /* ========================================================
    OTIMIZAÇÃO MOBILE (SMARTPHONES E TELAS PEQUENAS)
    ======================================================== */
-html, body {
+html,
+body {
     overflow-x: hidden !important;
     max-width: 100vw !important;
 }
 
 @media (max-width: 768px) {
+
     /* Espaçamentos principais */
     .main {
         padding: 10px !important;
@@ -209,26 +211,29 @@ html, body {
         box-sizing: border-box !important;
         overflow-x: hidden !important;
     }
-    
+
     /* Correção do Topbar e Perfil do Usuário para Mobile */
     .topbar {
         display: flex !important;
         flex-direction: column !important;
         align-items: flex-start !important;
         gap: 15px !important;
-        padding-top: 50px !important; /* Espaço para o menu hambúrguer e live sync */
+        padding-top: 50px !important;
+        /* Espaço para o menu hambúrguer e live sync */
         height: auto !important;
         width: 100% !important;
         box-sizing: border-box !important;
     }
+
     .usuario {
         width: 100% !important;
     }
-    .usuario > div {
+
+    .usuario>div {
         width: 100% !important;
         box-sizing: border-box !important;
     }
-    
+
     /* Menu lateral toggle flutuante absoluto */
     .menu-toggle {
         position: absolute !important;
@@ -244,7 +249,11 @@ html, body {
     }
 
     /* Compactação total de elementos */
-    .form-grid input, .form-grid select, .grid-forms input, .grid-forms select, .form-container input {
+    .form-grid input,
+    .form-grid select,
+    .grid-forms input,
+    .grid-forms select,
+    .form-container input {
         width: 100% !important;
         box-sizing: border-box !important;
         margin-bottom: 8px !important;
@@ -253,18 +262,30 @@ html, body {
     }
 
     /* Redução de fontes */
-    body { font-size: 0.8rem !important; }
-    h1 { font-size: 1.15rem !important; }
-    h2 { font-size: 1rem !important; }
-    h3 { font-size: 0.9rem !important; }
-    
+    body {
+        font-size: 0.8rem !important;
+    }
+
+    h1 {
+        font-size: 1.15rem !important;
+    }
+
+    h2 {
+        font-size: 1rem !important;
+    }
+
+    h3 {
+        font-size: 0.9rem !important;
+    }
+
     /* Tabelas hiper compactas */
-    table th, table td {
+    table th,
+    table td {
         font-size: 0.75rem !important;
         padding: 5px 6px !important;
         white-space: nowrap !important;
     }
-    
+
     /* Correção do cluster de botões para caber na tela sem sobrepor */
     .acoes {
         display: flex !important;
@@ -275,13 +296,17 @@ html, body {
         justify-content: flex-start !important;
         width: max-content !important;
     }
+
     .acoes form {
         display: block !important;
         margin: 0 !important;
         padding: 0 !important;
     }
-    
-    table td a, table td button, .acoes a, .acoes button {
+
+    table td a,
+    table td button,
+    .acoes a,
+    .acoes button {
         display: inline-flex !important;
         align-items: center !important;
         justify-content: center !important;
@@ -294,35 +319,41 @@ html, body {
         font-size: 0.75rem !important;
         border-radius: 6px !important;
     }
-    
+
     /* Correção da barra lateral */
     .sidebar {
         width: 260px !important;
         left: -260px !important;
         z-index: 10001 !important;
     }
+
     .sidebar.active {
         left: 0 !important;
-        box-shadow: 10px 0 30px rgba(0,0,0,0.5) !important;
+        box-shadow: 10px 0 30px rgba(0, 0, 0, 0.5) !important;
     }
 
     /* Ajuste de grids e containers */
-    .form-grid, .grid-forms, .cards, .dashboard-grid {
+    .form-grid,
+    .grid-forms,
+    .cards,
+    .dashboard-grid {
         display: flex !important;
         flex-direction: column !important;
         width: 100% !important;
         max-width: 100% !important;
         box-sizing: border-box !important;
     }
-    
-    .table-container, .form-container, .card {
+
+    .table-container,
+    .form-container,
+    .card {
         width: 100% !important;
         max-width: 100vw !important;
         box-sizing: border-box !important;
         overflow-x: auto !important;
         -webkit-overflow-scrolling: touch;
     }
-    
+
     .table-container table {
         min-width: 100% !important;
     }
