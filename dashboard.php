@@ -68,7 +68,7 @@ body{ background:#f1f5f9; }
 .menu a{ color:white; text-decoration:none; display:flex; align-items:center; gap:10px; padding:12px; border-radius:8px; transition:0.3s; }
 .menu a:hover{ background:#1e293b; }
 .main{ width:100%; padding:20px; }
-.topbar{ background:white; padding:15px 20px; border-radius:10px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 2px 5px rgba(0,0,0,0.1); margin-top:60px; }
+.topbar{ background:white; padding:15px 20px; border-radius:10px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 2px 5px rgba(0,0,0,0.1); margin-bottom: 25px; }
 .usuario{ display:flex; align-items:center; gap:10px; }
 .usuario img{ width:45px; height:45px; border-radius:50%; }
 .cards{ display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:20px; margin-top:25px; }
@@ -178,10 +178,34 @@ table th{ background:#e2e8f0; }
         </div>
     </div>
     <div class="cards">
-        <div class="card"><i class="fa fa-box"></i><h3>Total de Produtos</h3><p><?= $totalProdutos ?></p></div>
-        <div class="card"><i class="fa fa-warehouse"></i><h3>Itens em Estoque</h3><p><?= $totalEstoque ?></p></div>
-        <div class="card"><i class="fa fa-triangle-exclamation"></i><h3>Baixo Estoque</h3><p><?= $baixoEstoque ?></p></div>
-        <div class="card"><i class="fa fa-truck"></i><h3>Fornecedores</h3><p><?= $totalFornecedores ?></p></div>
+        <div class="card">
+            <div class="card-info">
+                <h3>Total de Produtos</h3>
+                <p><?= $totalProdutos ?></p>
+            </div>
+            <i class="fa fa-box card-icon" style="color: #3b82f6;"></i>
+        </div>
+        <div class="card">
+            <div class="card-info">
+                <h3>Itens em Estoque</h3>
+                <p><?= $totalEstoque ?></p>
+            </div>
+            <i class="fa fa-warehouse card-icon" style="color: #10b981;"></i>
+        </div>
+        <div class="card">
+            <div class="card-info">
+                <h3>Baixo Estoque</h3>
+                <p><?= $baixoEstoque ?></p>
+            </div>
+            <i class="fa fa-triangle-exclamation card-icon" style="color: #f59e0b;"></i>
+        </div>
+        <div class="card">
+            <div class="card-info">
+                <h3>Fornecedores</h3>
+                <p><?= $totalFornecedores ?></p>
+            </div>
+            <i class="fa fa-truck card-icon" style="color: #8b5cf6;"></i>
+        </div>
     </div>
     <div class="dashboard-grid">
         <div class="chart-box">

@@ -98,7 +98,7 @@ body{ background:#f1f5f9; }
 .menu a{ color:white; text-decoration:none; display:flex; align-items:center; gap:10px; padding:12px; border-radius:8px; transition:0.3s; }
 .menu a:hover{ background:#1e293b; }
 .main{ width:100%; padding:20px; }
-.topbar{ background:white; padding:15px 20px; border-radius:10px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 2px 5px rgba(0,0,0,0.1); margin-top:60px; }
+.topbar{ background:white; padding:15px 20px; border-radius:10px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 2px 5px rgba(0,0,0,0.1); margin-bottom: 25px; }
 .topbar form { display: flex; gap: 10px; }
 .topbar input{ width:300px; padding:10px; border:1px solid #ccc; border-radius:8px; }
 .cards{ display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:20px; margin-top:25px; }
@@ -187,16 +187,25 @@ table th{ background:#e2e8f0; }
     </div>
     <div class="cards">
         <div class="card">
-            <h3>Total de Movimentações</h3>
-            <p><?= $totalMovimentos ?></p>
+            <div class="card-info">
+                <h3>Total de Movimentações</h3>
+                <p><?= $totalMovimentos ?></p>
+            </div>
+            <i class="fa fa-exchange-alt card-icon" style="color: #3b82f6;"></i>
         </div>
         <div class="card">
-            <h3>Entradas</h3>
-            <p><?= $totalEntradas ?></p>
+            <div class="card-info">
+                <h3>Entradas</h3>
+                <p><?= $totalEntradas ?></p>
+            </div>
+            <i class="fa fa-arrow-down card-icon" style="color: #10b981;"></i>
         </div>
         <div class="card">
-            <h3>Saídas</h3>
-            <p><?= $totalSaidas ?></p>
+            <div class="card-info">
+                <h3>Saídas</h3>
+                <p><?= $totalSaidas ?></p>
+            </div>
+            <i class="fa fa-arrow-up card-icon" style="color: #ef4444;"></i>
         </div>
     </div>
     <div class="form-container">

@@ -160,7 +160,7 @@ $totalAdmins = array_reduce($usuarios, function($carry, $usr) { return $carry + 
         .menu a{ color:white; text-decoration:none; display:flex; align-items:center; gap:10px; padding:12px; border-radius:8px; transition:0.3s; }
         .menu a:hover{ background:#1e293b; }
         .main{ width:100%; padding:20px; transition: 0.4s; }
-        .topbar{ background:white; padding:15px 20px; border-radius:10px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 2px 5px rgba(0,0,0,0.1); margin-top:60px; }
+        .topbar{ background:white; padding:15px 20px; border-radius:10px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 2px 5px rgba(0,0,0,0.1); margin-bottom: 25px; }
         .cards{ display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:20px; margin-top:25px; }
         .card{ background:white; padding:20px; border-radius:12px; box-shadow:0 2px 5px rgba(0,0,0,0.1); }
         .card h3{ color:#64748b; }
@@ -245,12 +245,18 @@ $totalAdmins = array_reduce($usuarios, function($carry, $usr) { return $carry + 
         </div>
         <div class="cards">
             <div class="card">
-                <h3>Total de Usuários</h3>
-                <p><?= $totalUsuarios ?></p>
+                <div class="card-info">
+                    <h3>Total de Usuários</h3>
+                    <p><?= $totalUsuarios ?></p>
+                </div>
+                <i class="fa fa-users card-icon" style="color: #3b82f6;"></i>
             </div>
             <div class="card">
-                <h3>Administradores</h3>
-                <p><?= $totalAdmins ?></p>
+                <div class="card-info">
+                    <h3>Administradores</h3>
+                    <p><?= $totalAdmins ?></p>
+                </div>
+                <i class="fa fa-user-shield card-icon" style="color: #10b981;"></i>
             </div>
         </div>
         <div class="table-container">

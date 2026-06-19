@@ -85,7 +85,7 @@ body{ background:#f1f5f9; }
 .menu a{ color:white; text-decoration:none; display:flex; align-items:center; gap:10px; padding:12px; border-radius:8px; transition:0.3s; }
 .menu a:hover{ background:#1e293b; }
 .main{ width:100%; padding:20px; }
-.topbar{ background:white; padding:15px 20px; border-radius:10px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 2px 5px rgba(0,0,0,0.1); margin-top:60px; }
+.topbar{ background:white; padding:15px 20px; border-radius:10px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 2px 5px rgba(0,0,0,0.1); margin-bottom: 25px; }
 .topbar form { display: flex; gap: 10px; }
 .topbar input{ width:300px; padding:10px; border:1px solid #ccc; border-radius:8px; }
 .form-container{ margin-top:30px; background:white; padding:20px; border-radius:12px; box-shadow:0 2px 5px rgba(0,0,0,0.1); }
