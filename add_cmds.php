@@ -18,3 +18,4 @@ foreach ($cmds as $c) {
     }
 }
 ?>
+[]
