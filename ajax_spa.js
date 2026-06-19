@@ -167,8 +167,7 @@ document.addEventListener('DOMContentLoaded', () => {
         indicator.innerHTML = '<span style="display:inline-block; width:10px; height:10px; border-radius:50%; background:#10b981; box-shadow: 0 0 8px #10b981; animation: pulse 2s infinite; margin-right:5px;"></span><span style="font-size:12px; color:#64748b; font-weight:bold;">Sincronização Ativa</span>';
         indicator.style.position = 'absolute';
         indicator.style.top = '10px';
-        indicator.style.left = '50%';
-        indicator.style.transform = 'translateX(-50%)';
+        indicator.style.right = '15px';
         indicator.style.display = 'flex';
         indicator.style.alignItems = 'center';
         topbar.style.position = 'relative';

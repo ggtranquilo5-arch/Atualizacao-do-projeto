@@ -246,17 +246,23 @@ html, body {
         white-space: nowrap !important;
     }
     
-    /* Correção do cluster de botões para caber na tela */
-    table td.acoes, table td form, table td div, table td[style*="display: flex"] {
+    /* Correção do cluster de botões para caber na tela sem sobrepor */
+    .acoes {
         display: flex !important;
         flex-direction: row !important;
-        flex-wrap: wrap !important;
-        gap: 6px !important;
+        flex-wrap: nowrap !important;
+        gap: 8px !important;
         align-items: center !important;
         justify-content: flex-start !important;
+        width: max-content !important;
+    }
+    .acoes form {
+        display: block !important;
+        margin: 0 !important;
+        padding: 0 !important;
     }
     
-    table td a, table td button, .acoes a {
+    table td a, table td button, .acoes a, .acoes button {
         display: inline-flex !important;
         align-items: center !important;
         justify-content: center !important;
