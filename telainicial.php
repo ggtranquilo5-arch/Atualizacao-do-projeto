@@ -274,7 +274,7 @@ $ultimosProdutos = $stmt->fetchAll();
         body.dark-mode .alert-error { background: #450a0a; border-color: #7f1d1d; color: #fca5a5; }
         body.dark-mode .alert-success { background: #052e16; border-color: #14532d; color: #86efac; }
     </style>
-    <link rel="stylesheet" href="premium.css?v=1781810600">
+    <link rel="stylesheet" href="premium.css">
 </head>
 <body>
     <style>
@@ -395,5 +395,5 @@ $ultimosProdutos = $stmt->fetchAll();
         }
     });
     </script>
-</body>
+<script src="ajax_spa.js?v=<?= time() ?>"></script></body>
 </html>

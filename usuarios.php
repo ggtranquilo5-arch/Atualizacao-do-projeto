@@ -146,7 +146,7 @@ $totalAdmins = array_reduce($usuarios, function($carry, $usr) { return $carry + 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestão de Usuários - ALMOX</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="premium.css?v=1781810600">
+    <link rel="stylesheet" href="premium.css">
     <style>
         *{ margin:0; padding:0; box-sizing:border-box; font-family: 'Inter', sans-serif; }
         body{ background:#f1f5f9; color: #1e293b; transition: background 0.3s; }
@@ -328,7 +328,6 @@ $totalAdmins = array_reduce($usuarios, function($carry, $usr) { return $carry + 
                                 <?php else: ?>
                                     <a href="usuarios.php?banir_usuario=<?= $usr['id'] ?>&status=ativo" onclick="return confirm('Deseja banir <?= htmlspecialchars($usr['nome']) ?>?');" style="color:#f59e0b; text-decoration:none; font-weight:bold; font-size: 13px; display:inline-block; padding: 6px 12px; background: #fef3c7; border-radius: 6px;"><i class="fa fa-ban"></i> Banir</a>
                                 <?php endif; ?>
-                                <a href="usuarios.php?redefinir_senha=<?= $usr['id'] ?>" onclick="return confirm('Redefinir a senha para 123456?');" style="color:#8b5cf6; text-decoration:none; font-weight:bold; font-size: 13px; display:inline-block; padding: 6px 12px; background: #ede9fe; border-radius: 6px;"><i class="fa fa-key"></i> Senha</a>
                                 <a href="usuarios.php?excluir_usuario=<?= $usr['id'] ?>" onclick="return confirm('Deseja realmente excluir <?= htmlspecialchars($usr['nome']) ?> permanentemente?');" style="color:#ef4444; text-decoration:none; font-weight:bold; font-size: 13px; display:inline-block; padding: 6px 12px; background: #fef2f2; border-radius: 6px;"><i class="fa fa-trash"></i> Excluir</a>
                             <?php else: ?>
                                 <span style="color:#94a3b8; font-size:13px; font-weight: bold;"><i class="fa fa-user-check"></i> Você</span>
@@ -486,5 +485,5 @@ $totalAdmins = array_reduce($usuarios, function($carry, $usr) { return $carry + 
             document.getElementById(modalId).classList.remove('active');
         }
     </script>
-</body>
+<script src="ajax_spa.js?v=<?= time() ?>"></script></body>
 </html>

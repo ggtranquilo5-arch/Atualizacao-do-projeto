@@ -1,7 +1,7 @@
 <?php
 // Detecta se está rodando localmente (XAMPP) ou na InfinityFree
 if ($_SERVER['HTTP_HOST'] == 'localhost' || $_SERVER['HTTP_HOST'] == '127.0.0.1') {
-    $host = '127.0.0.1';
+    $host = 'localhost';
     $dbname = 'almoxarifado';
     $user = 'root';
     $pass = ''; 

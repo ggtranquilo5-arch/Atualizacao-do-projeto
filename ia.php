@@ -311,42 +311,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     }
 }
 
-try {
-    if (isset($_SESSION['nivel_acesso']) && $_SESSION['nivel_acesso'] === 'admin') {
-        $stmtComandos = $pdo->query("SELECT comando as cmd, descricao as `desc`, icone as icon, cor FROM ia_comandos ORDER BY comando ASC");
-    } else {
-        $stmtComandos = $pdo->query("SELECT comando as cmd, descricao as `desc`, icone as icon, cor FROM ia_comandos WHERE nivel_acesso = 'comum' ORDER BY comando ASC");
-    }
-    $comandos_db = $stmtComandos->fetchAll(PDO::FETCH_ASSOC);
-} catch (PDOException $e) {
-    // Fallback caso a tabela ia_comandos não exista
-    $comandos_db = [
-        ['cmd' => '/ajuda', 'desc' => 'Mostra a lista de todos os comandos', 'icon' => 'fa-question-circle', 'color' => '#a8c7fa'],
-        ['cmd' => '/adicionar', 'desc' => 'Adiciona quantidade ao estoque (Ex: /adicionar 5 mouse)', 'icon' => 'fa-plus', 'color' => '#10b981'],
-        ['cmd' => '/remover', 'desc' => 'Remove quantidade do estoque (Ex: /remover 2 teclado)', 'icon' => 'fa-minus', 'color' => '#ef4444'],
-        ['cmd' => '/estoque', 'desc' => 'Consulta o estoque de um produto', 'icon' => 'fa-box', 'color' => '#f59e0b'],
-        ['cmd' => '/historico', 'desc' => 'Ver histórico de entradas e saídas de um produto', 'icon' => 'fa-history', 'color' => '#3b82f6'],
-        ['cmd' => '/status', 'desc' => 'Status geral do almoxarifado', 'icon' => 'fa-server', 'color' => '#a8c7fa'],
-        ['cmd' => '/alertas', 'desc' => 'Lista itens com estoque baixo/zerado', 'icon' => 'fa-exclamation-triangle', 'color' => '#ef4444'],
-        ['cmd' => '/valor', 'desc' => 'Calcula o valor total em dinheiro no estoque', 'icon' => 'fa-dollar-sign', 'color' => '#10b981'],
-        ['cmd' => '/vendidos', 'desc' => 'Ver total geral de itens já despachados', 'icon' => 'fa-chart-line', 'color' => '#a8c7fa'],
-        ['cmd' => '/entradas', 'desc' => 'Exibir as últimas 5 entradas no sistema', 'icon' => 'fa-arrow-down', 'color' => '#10b981'],
-        ['cmd' => '/saidas', 'desc' => 'Exibir as últimas 5 saídas do sistema', 'icon' => 'fa-arrow-up', 'color' => '#ef4444'],
-        ['cmd' => '/fornecedores', 'desc' => 'Listar contatos dos fornecedores', 'icon' => 'fa-truck', 'color' => '#f59e0b'],
-        ['cmd' => '/comprar', 'desc' => 'Pesquisar preços no Mercado Livre (Ex: /comprar papel)', 'icon' => 'fa-shopping-cart', 'color' => '#eab308'],
-        ['cmd' => '/pesquisar', 'desc' => 'Buscar informações na Wikipedia (Ex: /pesquisar cpu)', 'icon' => 'fa-globe', 'color' => '#3b82f6']
-    ];
-    if (isset($_SESSION['nivel_acesso']) && $_SESSION['nivel_acesso'] === 'admin') {
-        $comandos_db = array_merge($comandos_db, [
-            ['cmd' => '/banir', 'desc' => 'Banir um usuário do sistema', 'icon' => 'fa-gavel', 'color' => '#ef4444'],
-            ['cmd' => '/desbanir', 'desc' => 'Desbanir um usuário', 'icon' => 'fa-unlock', 'color' => '#10b981'],
-            ['cmd' => '/usuarios', 'desc' => 'Lista todos os jogadores/usuários', 'icon' => 'fa-users', 'color' => '#a8c7fa'],
-            ['cmd' => '/promover', 'desc' => 'Promover um usuário a Admin', 'icon' => 'fa-star', 'color' => '#f59e0b'],
-            ['cmd' => '/rebaixar', 'desc' => 'Rebaixar Admin para Comum', 'icon' => 'fa-arrow-down', 'color' => '#ef4444'],
-            ['cmd' => '/deletar', 'desc' => 'Deleta um produto permanentemente', 'icon' => 'fa-trash', 'color' => '#ef4444']
-        ]);
-    }
+if (isset($_SESSION['nivel_acesso']) && $_SESSION['nivel_acesso'] === 'admin') {
+    $stmtComandos = $pdo->query("SELECT comando as cmd, descricao as `desc`, icone as icon, cor FROM ia_comandos ORDER BY comando ASC");
+} else {
+    $stmtComandos = $pdo->query("SELECT comando as cmd, descricao as `desc`, icone as icon, cor FROM ia_comandos WHERE nivel_acesso = 'comum' ORDER BY comando ASC");
 }
+$comandos_db = $stmtComandos->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -355,7 +325,7 @@ try {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IA Gerencial Avançada | ALMOX</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="premium.css?v=1781810600">
+    <link rel="stylesheet" href="premium.css">
     <style>
         :root {
             --ia-bg: #131314;
@@ -622,39 +592,10 @@ try {
             color: #b5bac1;
             font-size: 0.85rem;
         }
-
-        /* BOTAO MENU MOBILE */
-        .menu-toggle-ia {
-            position: fixed; top: 15px; left: 15px; z-index: 10000;
-            background: #1e1f20; color: #a8c7fa; border: 1px solid rgba(255,255,255,0.1);
-            width: 45px; height: 45px; border-radius: 8px; font-size: 20px; cursor: pointer;
-            display: none;
-        }
-
-        /* ==== RESPONSIVIDADE MOBILE DA IA ==== */
-        @media (max-width: 768px) {
-            body { padding-left: 0 !important; }
-            .sidebar { left: -260px; transition: 0.3s; z-index: 9999; }
-            .sidebar.active { left: 0; box-shadow: 10px 0 30px rgba(0,0,0,0.8); }
-            .menu-toggle-ia { display: block; }
-            .main { padding: 15px; padding-top: 70px; width: 100%; box-sizing: border-box; }
-            .header-ia h1 { font-size: 1.4rem; flex-wrap: wrap; }
-            .ai-status { font-size: 0.8rem; }
-            .chat-messages { padding: 15px; gap: 15px; }
-            .message-wrapper { max-width: 95%; }
-            .message { padding: 12px 15px; font-size: 0.9rem; }
-            .chat-input-area { padding: 10px; gap: 10px; }
-            .input-container { padding: 2px 10px; }
-            .btn-send { width: 40px; height: 40px; font-size: 1rem; }
-            .suggestions-box { left: 10px; width: calc(100% - 20px); }
-        }
     </style>
 </head>
 <body>
-    <button class="menu-toggle-ia" onclick="document.getElementById('sidebar-ia').classList.toggle('active')">
-        <i class="fa fa-bars"></i>
-    </button>
-    <aside class="sidebar" id="sidebar-ia">
+    <aside class="sidebar">
         <div class="logo"><h2>ALMOX</h2></div>
         <ul class="menu">
             <li><a href="telainicial.php"><i class="fa fa-house"></i> Início</a></li>
@@ -931,5 +872,5 @@ try {
             return `Comando "<b>${perguntaOriginal}</b>" incorreto ou com parâmetros faltando. Digite <b>/ajuda</b>.`;
         }
     </script>
-</body>
+<script src="ajax_spa.js?v=<?= time() ?>"></script></body>
 </html>

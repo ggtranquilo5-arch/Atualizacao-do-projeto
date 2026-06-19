@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao']) && $_POST['ac
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ALMOX | Login</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="premium.css?v=1781810600">
+    <link rel="stylesheet" href="premium.css">
     <style>
         :root {
             --primary-color: #2563eb;
@@ -172,5 +172,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao']) && $_POST['ac
         }
     });
 </script>
-</body>
+<script src="ajax_spa.js?v=<?= time() ?>"></script></body>
 </html>
