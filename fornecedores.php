@@ -145,7 +145,7 @@ table th{ background:#e2e8f0; }
         <li><a href="produtos.php"><i class="fa fa-box"></i> Produtos</a></li>
         <li><a href="estoque.php"><i class="fa fa-warehouse"></i> Estoque</a></li>
         <li><a href="fornecedores.php"><i class="fa fa-truck"></i> Fornecedores</a></li>
-        <?php if (isset($_SESSION['nivel_acesso']) && $_SESSION['nivel_acesso'] === 'admin'): ?>
+        <?php if (isset($_SESSION['nivel_acesso']) && in_array($_SESSION['nivel_acesso'], ['admin', 'ceo'])): ?>
         <li><a href="usuarios.php"><i class="fa fa-users"></i> Usuários</a></li>
         <li><a href="relatorios.php"><i class="fa fa-file"></i> Relatórios</a></li>
         <li><a href="configuracoes.php"><i class="fa fa-gear"></i> Configurações</a></li>
@@ -207,7 +207,7 @@ table th{ background:#e2e8f0; }
                     <th>E-mail</th>
                     <th>Cidade</th>
                     <th>Status</th>
-                    <?php if (isset($_SESSION['nivel_acesso']) && $_SESSION['nivel_acesso'] === 'admin'): ?>
+                    <?php if (isset($_SESSION['nivel_acesso']) && in_array($_SESSION['nivel_acesso'], ['admin', 'ceo'])): ?>
                     <th>Ações</th>
                     <?php endif; ?>
                 </tr>
@@ -222,7 +222,7 @@ table th{ background:#e2e8f0; }
                     <td><?= htmlspecialchars($forn['email']) ?></td>
                     <td><?= htmlspecialchars($forn['cidade']) ?></td>
                     <td><span class="status <?= $classe ?>"><?= htmlspecialchars($forn['status']) ?></span></td>
-                    <?php if (isset($_SESSION['nivel_acesso']) && $_SESSION['nivel_acesso'] === 'admin'): ?>
+                    <?php if (isset($_SESSION['nivel_acesso']) && in_array($_SESSION['nivel_acesso'], ['admin', 'ceo'])): ?>
                     <td class="acoes">
                         <a href="#" onclick="editarFornecedor(<?= $forn['id'] ?>, '<?= addslashes(htmlspecialchars($forn['nome'])) ?>', '<?= addslashes(htmlspecialchars($forn['telefone'])) ?>', '<?= addslashes(htmlspecialchars($forn['email'])) ?>', '<?= addslashes(htmlspecialchars($forn['cidade'])) ?>')" style="padding:8px 12px; background:#f59e0b; color:white; text-decoration:none; border-radius:8px; font-size:14px; margin-right:5px;"><i class='fa fa-pen'></i> Editar</a>
                         <a href="fornecedores.php?excluir=<?= $forn['id'] ?>" class="btn-delete" onclick="return confirm('Tem certeza que deseja excluir?');">Excluir</a>
