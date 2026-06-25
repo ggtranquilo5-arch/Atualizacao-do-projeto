@@ -154,7 +154,7 @@ table th{ background:#e2e8f0; }
         <li><a href="produtos.php"><i class="fa fa-box"></i> Produtos</a></li>
         <li><a href="estoque.php"><i class="fa fa-warehouse"></i> Estoque</a></li>
         <li><a href="fornecedores.php"><i class="fa fa-truck"></i> Fornecedores</a></li>
-        <?php if (isset($_SESSION['nivel_acesso']) && $_SESSION['nivel_acesso'] === 'admin'): ?>
+        <?php if (isset($_SESSION['nivel_acesso']) && in_array($_SESSION['nivel_acesso'], ['admin', 'ceo'])): ?>
         <li><a href="usuarios.php"><i class="fa fa-users"></i> Usuários</a></li>
         <li><a href="relatorios.php"><i class="fa fa-file"></i> Relatórios</a></li>
         <li><a href="configuracoes.php"><i class="fa fa-gear"></i> Configurações</a></li>
@@ -198,7 +198,7 @@ table th{ background:#e2e8f0; }
                     <th>Quantidade</th>
                     <th>Preço</th>
                     <th>Status</th>
-                    <?php if (isset($_SESSION['nivel_acesso']) && $_SESSION['nivel_acesso'] === 'admin'): ?>
+                    <?php if (isset($_SESSION['nivel_acesso']) && in_array($_SESSION['nivel_acesso'], ['admin', 'ceo'])): ?>
                     <th>Ações</th>
                     <?php endif; ?>
                 </tr>
@@ -217,7 +217,7 @@ table th{ background:#e2e8f0; }
                     <td><?= $prod['quantidade'] ?></td>
                     <td>R$ <?= number_format($prod['preco'], 2, ',', '.') ?></td>
                     <td><span class="status <?= $classe ?>"><?= htmlspecialchars($prod['status']) ?></span></td>
-                    <?php if (isset($_SESSION['nivel_acesso']) && $_SESSION['nivel_acesso'] === 'admin'): ?>
+                    <?php if (isset($_SESSION['nivel_acesso']) && in_array($_SESSION['nivel_acesso'], ['admin', 'ceo'])): ?>
                     <td class="acoes">
                         <a href="#" onclick="editarProduto(<?= $prod['id'] ?>, '<?= addslashes(htmlspecialchars($prod['nome'])) ?>', <?= $prod['quantidade'] ?>, <?= $prod['preco'] ?>, <?= $prod['categoria_id'] ?>)" style="padding:8px 12px; background:#f59e0b; color:white; text-decoration:none; border-radius:8px; font-size:14px; margin-right:5px;"><i class='fa fa-pen'></i> Editar</a>
                         <a href="produtos.php?excluir=<?= $prod['id'] ?>" class="btn-delete" onclick="return confirm('Tem certeza que deseja excluir?');">Excluir</a>
