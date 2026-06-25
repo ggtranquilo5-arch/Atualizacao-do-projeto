@@ -215,7 +215,7 @@ document.addEventListener('DOMContentLoaded', () => {
             syncElement('.cards'); // Atualiza contadores numéricos
             syncElement('.activity'); // Atualiza apenas o histórico, preservando o gráfico
             syncElement('.sidebar .menu'); // Atualiza os menus disponíveis
-            syncElement('.topbar .usuario'); // Atualiza o perfil logado no dashboard
+            syncElement('.topbar'); // Atualiza toda a barra superior (perfil, botão sair, etc)
 
             if (hasChanges) {
                 let toastContainer = document.querySelector('.toast-container');

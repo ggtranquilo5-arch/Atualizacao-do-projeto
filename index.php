@@ -149,7 +149,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao']) && $_POST['ac
         <?php if (isset($_GET['timeout'])): ?>
             <div class="alert alert-error"><i class="fa fa-clock"></i> Sua sessão expirou por inatividade.</div>
         <?php endif; ?>
-        <form method="POST" action="index.php">
+        <form method="POST" action="index.php" data-no-ajax="true">
             <input type="hidden" name="acao" value="login">
             <div class="field">
                 <label for="l-email">Login (E-mail)</label>
