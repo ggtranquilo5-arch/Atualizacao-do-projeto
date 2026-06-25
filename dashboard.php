@@ -148,7 +148,7 @@ table th{ background:#e2e8f0; }
         <li><a href="produtos.php"><i class="fa fa-box"></i> Produtos</a></li>
         <li><a href="estoque.php"><i class="fa fa-warehouse"></i> Estoque</a></li>
         <li><a href="fornecedores.php"><i class="fa fa-truck"></i> Fornecedores</a></li>
-        <?php if (isset($_SESSION['nivel_acesso']) && $_SESSION['nivel_acesso'] === 'admin'): ?>
+        <?php if (isset($_SESSION['nivel_acesso']) && in_array($_SESSION['nivel_acesso'], ['admin', 'ceo'])): ?>
         <li><a href="usuarios.php"><i class="fa fa-users"></i> Usuários</a></li>
         <li><a href="relatorios.php"><i class="fa fa-file"></i> Relatórios</a></li>
         <li><a href="configuracoes.php"><i class="fa fa-gear"></i> Configurações</a></li>
@@ -166,7 +166,15 @@ table th{ background:#e2e8f0; }
                 </p>
                 <p style="color: var(--text-muted); font-size: 0.9rem;">
                     <i class="fa fa-id-badge" style="font-size: 0.8rem; margin-right: 4px;"></i> Almoxarifado Central 
-                    <?= (isset($_SESSION['nivel_acesso']) && $_SESSION['nivel_acesso'] === 'admin') ? '<span style="color:var(--primary-color);font-weight:bold;margin-left:5px;">[Admin]</span>' : '<span style="color:#10b981;font-weight:bold;margin-left:5px;">[Comum]</span>' ?>
+                    <?php if (isset($_SESSION['nivel_acesso'])): ?>
+                        <?php if ($_SESSION['nivel_acesso'] === 'ceo'): ?>
+                            <span style="color:#d97706;font-weight:bold;margin-left:5px;text-shadow: 0 0 5px rgba(217,119,6,0.3);">[CEO / Owner]</span>
+                        <?php elseif ($_SESSION['nivel_acesso'] === 'admin'): ?>
+                            <span style="color:var(--primary-color);font-weight:bold;margin-left:5px;">[Admin]</span>
+                        <?php else: ?>
+                            <span style="color:#10b981;font-weight:bold;margin-left:5px;">[Comum]</span>
+                        <?php endif; ?>
+                    <?php endif; ?>
                 </p>
             </div>
         </div>

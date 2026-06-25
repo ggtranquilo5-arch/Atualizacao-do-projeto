@@ -5,7 +5,7 @@ if (!isset($_SESSION['usuario_id'])) {
     header("Location: index.php");
     exit;
 }
-if (!isset($_SESSION['nivel_acesso']) || $_SESSION['nivel_acesso'] !== 'admin') {
+if (!isset($_SESSION['nivel_acesso']) || !in_array($_SESSION['nivel_acesso'], ['admin', 'ceo'])) {
     die("Acesso negado. Apenas administradores podem acessar as configurações.");
 }
 ?>

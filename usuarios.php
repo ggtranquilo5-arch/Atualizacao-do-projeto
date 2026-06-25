@@ -5,8 +5,8 @@ if (!isset($_SESSION['usuario_id'])) {
     header("Location: index.php");
     exit;
 }
-if (!isset($_SESSION['nivel_acesso']) || $_SESSION['nivel_acesso'] !== 'admin') {
-    die("Acesso negado. Apenas administradores podem gerenciar usuários.");
+if (!isset($_SESSION['nivel_acesso']) || !in_array($_SESSION['nivel_acesso'], ['admin', 'ceo'])) {
+    die("Acesso negado. Apenas administradores e CEOs podem gerenciar usuários.");
 }
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao']) && $_POST['acao'] === 'adicionar_usuario') {
     $nome = $_POST['nome'];
@@ -61,15 +61,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao']) && $_POST['ac
 }
 if (isset($_GET['excluir_usuario'])) {
     $id_excluir = (int)$_GET['excluir_usuario'];
-    if ($id_excluir !== $_SESSION['usuario_id']) { 
-        $usr_nome = $pdo->query("SELECT nome FROM usuarios WHERE id = $id_excluir")->fetchColumn();
-        $stmt = $pdo->prepare("DELETE FROM usuarios WHERE id = ?");
-        $stmt->execute([$id_excluir]);
-        $pdo->prepare("INSERT INTO logs_atividades (usuario_id, acao, detalhes) VALUES (?, ?, ?)")
-            ->execute([$_SESSION['usuario_id'], 'Excluir Usuário', "Excluiu o usuário ID $id_excluir (" . ($usr_nome ?: 'Desconhecido') . ")"]);
-        $_SESSION['msg_sucesso'] = "Usuário excluído com sucesso!";
-    } else {
-        $_SESSION['msg_erro'] = "Ação negada.";
+    $alvo = $pdo->query("SELECT nome, nivel_acesso FROM usuarios WHERE id = $id_excluir")->fetch();
+    
+    if ($alvo) {
+        if ($id_excluir === $_SESSION['usuario_id']) {
+            $_SESSION['msg_erro'] = "Ação negada: Você não pode excluir a si mesmo.";
+        } elseif ($alvo['nivel_acesso'] === 'ceo' && $_SESSION['nivel_acesso'] !== 'ceo') {
+            $_SESSION['msg_erro'] = "Ação negada: Você não tem permissão para excluir um CEO.";
+        } else {
+            $stmt = $pdo->prepare("DELETE FROM usuarios WHERE id = ?");
+            $stmt->execute([$id_excluir]);
+            $pdo->prepare("INSERT INTO logs_atividades (usuario_id, acao, detalhes) VALUES (?, ?, ?)")
+                ->execute([$_SESSION['usuario_id'], 'Excluir Usuário', "Excluiu o usuário ID $id_excluir (" . $alvo['nome'] . ")"]);
+            $_SESSION['msg_sucesso'] = "Usuário excluído com sucesso!";
+        }
     }
     header("Location: usuarios.php");
     exit;
@@ -78,15 +83,22 @@ if (isset($_GET['banir_usuario'])) {
     $id_banir = (int)$_GET['banir_usuario'];
     $status_atual = $_GET['status'] ?? 'ativo';
     $novo_status = $status_atual === 'banido' ? 'ativo' : 'banido';
-    if ($id_banir !== $_SESSION['usuario_id']) { 
-        $usr_nome = $pdo->query("SELECT nome FROM usuarios WHERE id = $id_banir")->fetchColumn();
-        $stmt = $pdo->prepare("UPDATE usuarios SET status = ? WHERE id = ?");
-        $stmt->execute([$novo_status, $id_banir]);
-        $acao = $novo_status === 'banido' ? 'Banir Usuário' : 'Desbanir Usuário';
-        $detalhes = $novo_status === 'banido' ? "Baniu o usuário ID $id_banir (" . ($usr_nome ?: 'Desconhecido') . ")" : "Desbaniu o usuário ID $id_banir (" . ($usr_nome ?: 'Desconhecido') . ")";
-        $pdo->prepare("INSERT INTO logs_atividades (usuario_id, acao, detalhes) VALUES (?, ?, ?)")
-            ->execute([$_SESSION['usuario_id'], $acao, $detalhes]);
-        $_SESSION['msg_sucesso'] = "Status de banimento atualizado!";
+    $alvo = $pdo->query("SELECT nome, nivel_acesso FROM usuarios WHERE id = $id_banir")->fetch();
+
+    if ($alvo) {
+        if ($id_banir === $_SESSION['usuario_id']) {
+            $_SESSION['msg_erro'] = "Ação negada: Você não pode banir a si mesmo.";
+        } elseif ($alvo['nivel_acesso'] === 'ceo' && $_SESSION['nivel_acesso'] !== 'ceo') {
+            $_SESSION['msg_erro'] = "Ação negada: Você não tem permissão para banir um CEO.";
+        } else {
+            $stmt = $pdo->prepare("UPDATE usuarios SET status = ? WHERE id = ?");
+            $stmt->execute([$novo_status, $id_banir]);
+            $acao = $novo_status === 'banido' ? 'Banir Usuário' : 'Desbanir Usuário';
+            $detalhes = $novo_status === 'banido' ? "Baniu o usuário ID $id_banir (" . $alvo['nome'] . ")" : "Desbaniu o usuário ID $id_banir (" . $alvo['nome'] . ")";
+            $pdo->prepare("INSERT INTO logs_atividades (usuario_id, acao, detalhes) VALUES (?, ?, ?)")
+                ->execute([$_SESSION['usuario_id'], $acao, $detalhes]);
+            $_SESSION['msg_sucesso'] = "Status de banimento atualizado!";
+        }
     }
     header("Location: usuarios.php");
     exit;
@@ -95,19 +107,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao']) && $_POST['ac
     try {
         $id_usuario = (int)$_POST['usuario_id'];
         $novo_nivel = trim($_POST['nivel_acesso']); 
+        $alvo = $pdo->query("SELECT nome, nivel_acesso FROM usuarios WHERE id = $id_usuario")->fetch();
         
-        if ($id_usuario !== $_SESSION['usuario_id'] && in_array($novo_nivel, ['admin', 'comum'])) {
-            $usr_nome = $pdo->query("SELECT nome FROM usuarios WHERE id = $id_usuario")->fetchColumn();
+        if ($alvo) {
+            $allowed_roles = $_SESSION['nivel_acesso'] === 'ceo' ? ['ceo', 'admin', 'comum'] : ['admin', 'comum'];
             
-            $stmt = $pdo->prepare("UPDATE usuarios SET nivel_acesso = ? WHERE id = ?");
-            $stmt->execute([$novo_nivel, $id_usuario]);
-            
-            $pdo->prepare("INSERT INTO logs_atividades (usuario_id, acao, detalhes) VALUES (?, ?, ?)")
-                ->execute([$_SESSION['usuario_id'], 'Mudar Nível', "Alterou nível do ID $id_usuario (" . ($usr_nome ?: 'Desconhecido') . ") para $novo_nivel"]);
+            if ($id_usuario === $_SESSION['usuario_id']) {
+                $_SESSION['msg_erro'] = "Você não pode alterar seu próprio nível de acesso.";
+            } elseif ($alvo['nivel_acesso'] === 'ceo' && $_SESSION['nivel_acesso'] !== 'ceo') {
+                $_SESSION['msg_erro'] = "Ação negada: Apenas outro CEO pode alterar o nível de um CEO.";
+            } elseif (!in_array($novo_nivel, $allowed_roles)) {
+                $_SESSION['msg_erro'] = "Ação negada: Você não tem permissão para conceder esse cargo.";
+            } else {
+                $stmt = $pdo->prepare("UPDATE usuarios SET nivel_acesso = ? WHERE id = ?");
+                $stmt->execute([$novo_nivel, $id_usuario]);
                 
-            $_SESSION['msg_sucesso'] = "Nível de acesso alterado com sucesso para $novo_nivel!";
-        } else {
-            $_SESSION['msg_erro'] = "Ação negada ou nível inválido.";
+                $pdo->prepare("INSERT INTO logs_atividades (usuario_id, acao, detalhes) VALUES (?, ?, ?)")
+                    ->execute([$_SESSION['usuario_id'], 'Mudar Nível', "Alterou nível do ID $id_usuario (" . $alvo['nome'] . ") para $novo_nivel"]);
+                    
+                $_SESSION['msg_sucesso'] = "Nível de acesso alterado com sucesso para $novo_nivel!";
+            }
         }
     } catch (Exception $e) {
         $_SESSION['msg_erro'] = "Erro ao alterar nível: " . $e->getMessage();
@@ -325,28 +344,41 @@ $totalAdmins = array_reduce($usuarios, function($carry, $usr) { return $carry + 
                                 <input type="hidden" name="acao" value="mudar_nivel">
                                 <input type="hidden" name="usuario_id" value="<?= $usr['id'] ?>">
                                 <div style="position: relative;">
-                                    <select name="nivel_acesso" onchange="this.parentElement.nextElementSibling?.remove(); const b = document.createElement('button'); b.type = 'submit'; b.style.display = 'none'; this.form.appendChild(b); b.click(); b.remove();" style="appearance: none; -webkit-appearance: none; padding: 6px 30px 6px 12px; border-radius:6px; border:1px solid <?= $usr['nivel_acesso'] == 'admin' ? '#3b82f6' : '#cbd5e1' ?>; outline:none; background: <?= $usr['nivel_acesso'] == 'admin' ? '#eff6ff' : '#f8fafc' ?>; color: <?= $usr['nivel_acesso'] == 'admin' ? '#1e3a8a' : '#334155' ?>; font-weight: 500; cursor: pointer; transition: 0.2s;" <?= $usr['id'] === $_SESSION['usuario_id'] ? 'disabled' : '' ?>>
-                                        <option value="comum" <?= $usr['nivel_acesso'] == 'comum' ? 'selected' : '' ?>>Usuário Comum</option>
-                                        <option value="admin" <?= $usr['nivel_acesso'] == 'admin' ? 'selected' : '' ?>>Administrador</option>
-                                    </select>
-                                    <?php if ($usr['id'] !== $_SESSION['usuario_id']): ?>
-                                        <i class="fa fa-caret-down" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); pointer-events: none; color: #64748b;"></i>
+                                    <?php if ($usr['nivel_acesso'] === 'ceo' && $_SESSION['nivel_acesso'] !== 'ceo'): ?>
+                                        <div style="padding: 6px 12px; background: rgba(217, 119, 6, 0.1); color: #d97706; border-radius: 6px; font-weight: bold; border: 1px solid rgba(217, 119, 6, 0.3); text-align: center;">
+                                            <i class="fa fa-crown"></i> CEO / Owner
+                                        </div>
+                                    <?php else: ?>
+                                        <select name="nivel_acesso" onchange="this.parentElement.nextElementSibling?.remove(); const b = document.createElement('button'); b.type = 'submit'; b.style.display = 'none'; this.form.appendChild(b); b.click(); b.remove();" style="appearance: none; -webkit-appearance: none; padding: 6px 30px 6px 12px; border-radius:6px; border:1px solid <?= $usr['nivel_acesso'] == 'ceo' ? '#d97706' : ($usr['nivel_acesso'] == 'admin' ? '#3b82f6' : '#cbd5e1') ?>; outline:none; background: <?= $usr['nivel_acesso'] == 'ceo' ? '#fffbeb' : ($usr['nivel_acesso'] == 'admin' ? '#eff6ff' : '#f8fafc') ?>; color: <?= $usr['nivel_acesso'] == 'ceo' ? '#b45309' : ($usr['nivel_acesso'] == 'admin' ? '#1e3a8a' : '#334155') ?>; font-weight: 500; cursor: pointer; transition: 0.2s;" <?= $usr['id'] === $_SESSION['usuario_id'] ? 'disabled' : '' ?>>
+                                            <option value="comum" <?= $usr['nivel_acesso'] == 'comum' ? 'selected' : '' ?>>Usuário Comum</option>
+                                            <option value="admin" <?= $usr['nivel_acesso'] == 'admin' ? 'selected' : '' ?>>Administrador</option>
+                                            <?php if ($_SESSION['nivel_acesso'] === 'ceo'): ?>
+                                                <option value="ceo" <?= $usr['nivel_acesso'] == 'ceo' ? 'selected' : '' ?>>CEO / Owner</option>
+                                            <?php endif; ?>
+                                        </select>
+                                        <?php if ($usr['id'] !== $_SESSION['usuario_id']): ?>
+                                            <i class="fa fa-caret-down" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); pointer-events: none; color: <?= $usr['nivel_acesso'] == 'ceo' ? '#d97706' : '#64748b' ?>;"></i>
+                                        <?php endif; ?>
                                     <?php endif; ?>
                                 </div>
                                 <?php /* Botão Salvar Cargo removido para otimização (Auto-Save no onchange) */ ?>
                             </form>
                         </td>
                         <td style="display: flex; gap: 8px; flex-wrap:wrap;">
-                            <button onclick='abrirModalEdit(<?= json_encode($usr) ?>)' style="color:#0ea5e9; font-weight:bold; font-size: 13px; display:inline-block; padding: 6px 12px; background: #e0f2fe; border-radius: 6px;"><i class="fa fa-pen"></i> Editar</button>
-                            <?php if ($usr['id'] !== $_SESSION['usuario_id']): ?>
-                                <?php if($usr['status'] === 'banido'): ?>
-                                    <a href="usuarios.php?banir_usuario=<?= $usr['id'] ?>&status=banido" style="color:#10b981; text-decoration:none; font-weight:bold; font-size: 13px; display:inline-block; padding: 6px 12px; background: #d1fae5; border-radius: 6px;"><i class="fa fa-unlock"></i> Desbanir</a>
-                                <?php else: ?>
-                                    <a href="usuarios.php?banir_usuario=<?= $usr['id'] ?>&status=ativo" onclick="return confirm('Deseja banir <?= htmlspecialchars($usr['nome']) ?>?');" style="color:#f59e0b; text-decoration:none; font-weight:bold; font-size: 13px; display:inline-block; padding: 6px 12px; background: #fef3c7; border-radius: 6px;"><i class="fa fa-ban"></i> Banir</a>
-                                <?php endif; ?>
-                                <a href="usuarios.php?excluir_usuario=<?= $usr['id'] ?>" onclick="return confirm('Deseja realmente excluir <?= htmlspecialchars($usr['nome']) ?> permanentemente?');" style="color:#ef4444; text-decoration:none; font-weight:bold; font-size: 13px; display:inline-block; padding: 6px 12px; background: #fef2f2; border-radius: 6px;"><i class="fa fa-trash"></i> Excluir</a>
+                            <?php if ($usr['nivel_acesso'] === 'ceo' && $_SESSION['nivel_acesso'] !== 'ceo'): ?>
+                                <span style="color:#d97706; font-size:13px; font-weight: bold; padding: 6px 12px; background: rgba(217, 119, 6, 0.1); border-radius: 6px;"><i class="fa fa-shield-alt"></i> Protegido</span>
                             <?php else: ?>
-                                <span style="color:#94a3b8; font-size:13px; font-weight: bold;"><i class="fa fa-user-check"></i> Você</span>
+                                <button onclick='abrirModalEdit(<?= json_encode($usr) ?>)' style="color:#0ea5e9; font-weight:bold; font-size: 13px; display:inline-block; padding: 6px 12px; background: #e0f2fe; border-radius: 6px;"><i class="fa fa-pen"></i> Editar</button>
+                                <?php if ($usr['id'] !== $_SESSION['usuario_id']): ?>
+                                    <?php if($usr['status'] === 'banido'): ?>
+                                        <a href="usuarios.php?banir_usuario=<?= $usr['id'] ?>&status=banido" style="color:#10b981; text-decoration:none; font-weight:bold; font-size: 13px; display:inline-block; padding: 6px 12px; background: #d1fae5; border-radius: 6px;"><i class="fa fa-unlock"></i> Desbanir</a>
+                                    <?php else: ?>
+                                        <a href="usuarios.php?banir_usuario=<?= $usr['id'] ?>&status=ativo" onclick="return confirm('Deseja banir <?= htmlspecialchars($usr['nome']) ?>?');" style="color:#f59e0b; text-decoration:none; font-weight:bold; font-size: 13px; display:inline-block; padding: 6px 12px; background: #fef3c7; border-radius: 6px;"><i class="fa fa-ban"></i> Banir</a>
+                                    <?php endif; ?>
+                                    <a href="usuarios.php?excluir_usuario=<?= $usr['id'] ?>" onclick="return confirm('Deseja realmente excluir <?= htmlspecialchars($usr['nome']) ?> permanentemente?');" style="color:#ef4444; text-decoration:none; font-weight:bold; font-size: 13px; display:inline-block; padding: 6px 12px; background: #fef2f2; border-radius: 6px;"><i class="fa fa-trash"></i> Excluir</a>
+                                <?php else: ?>
+                                    <span style="color:#94a3b8; font-size:13px; font-weight: bold;"><i class="fa fa-user-check"></i> Você</span>
+                                <?php endif; ?>
                             <?php endif; ?>
                         </td>
                     </tr>

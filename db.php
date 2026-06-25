@@ -26,6 +26,11 @@ try {
         detalhes TEXT,
         data_hora TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )");
+    
+    // Atualização estrutural para o novo cargo CEO
+    $pdo->exec("ALTER TABLE usuarios MODIFY COLUMN nivel_acesso ENUM('ceo', 'admin', 'comum') NOT NULL DEFAULT 'comum'");
+    // Definir o usuário mestre (id 1) como CEO
+    $pdo->exec("UPDATE usuarios SET nivel_acesso = 'ceo' WHERE id = 1");
 } catch (PDOException $e) {
 }
 if (isset($_SESSION['usuario_id'])) {

@@ -10,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     $response = ['html' => '', 'handled' => false];
     
     $isAdminCommand = preg_match('/^\/(banir|desbanir|promover|rebaixar|usuarios|deletar)(\s|$)/i', $pergunta);
-    if ($isAdminCommand && $_SESSION['nivel_acesso'] !== 'admin') {
+    if ($isAdminCommand && !in_array($_SESSION['nivel_acesso'], ['admin', 'ceo'])) {
         $response['html'] = "<b><i class='fa fa-lock' style='color:#ef4444;'></i> Acesso Negado:</b> Você não tem permissão para usar comandos de administrador.";
         $response['handled'] = true;
     }
@@ -66,12 +66,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     }
     elseif (preg_match('/^\/banir\s+(.+)/i', $pergunta, $matches)) {
         $termo = trim($matches[1]);
-        $stmt = $pdo->prepare("SELECT id, nome, status FROM usuarios WHERE id = ? OR email = ? OR nome LIKE ? LIMIT 1");
+        $stmt = $pdo->prepare("SELECT id, nome, status, nivel_acesso FROM usuarios WHERE id = ? OR email = ? OR nome LIKE ? LIMIT 1");
         $stmt->execute([$termo, $termo, "%$termo%"]);
         $user = $stmt->fetch();
         if ($user) {
             if ($user['id'] == $_SESSION['usuario_id']) {
                 $response['html'] = "<b>Erro:</b> Você não pode dar ban em si mesmo.";
+            } elseif ($user['nivel_acesso'] === 'ceo' && $_SESSION['nivel_acesso'] !== 'ceo') {
+                $response['html'] = "<b>Erro:</b> Você não tem permissão para banir um CEO.";
             } else {
                 $pdo->prepare("UPDATE usuarios SET status = 'banido' WHERE id = ?")->execute([$user['id']]);
                 
@@ -106,10 +108,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     }
     elseif (preg_match('/^\/promover\s+(.+)/i', $pergunta, $matches)) {
         $termo = trim($matches[1]);
-        $stmt = $pdo->prepare("SELECT id, nome FROM usuarios WHERE id = ? OR email = ? OR nome LIKE ? LIMIT 1");
+        $stmt = $pdo->prepare("SELECT id, nome, nivel_acesso FROM usuarios WHERE id = ? OR email = ? OR nome LIKE ? LIMIT 1");
         $stmt->execute([$termo, $termo, "%$termo%"]);
         $user = $stmt->fetch();
         if ($user) {
+            if ($user['nivel_acesso'] === 'ceo') {
+                $response['html'] = "<b>Aviso:</b> Este usuário já é CEO.";
+            } else {
             $pdo->prepare("UPDATE usuarios SET nivel_acesso = 'admin' WHERE id = ?")->execute([$user['id']]);
             
             $detalhes = "Alterou nível do ID {$user['id']} ({$user['nome']}) para admin via Terminal IA";
@@ -117,6 +122,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 ->execute([$_SESSION['usuario_id'], $detalhes]);
                 
             $response['html'] = "<b><i class='fa fa-star' style='color:#f59e0b;'></i> PROMOVIDO!</b> O usuário <b>{$user['nome']}</b> agora é Admin.";
+            }
         } else {
             $response['html'] = "Usuário '$termo' não encontrado.";
         }
@@ -124,12 +130,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     }
     elseif (preg_match('/^\/rebaixar\s+(.+)/i', $pergunta, $matches)) {
         $termo = trim($matches[1]);
-        $stmt = $pdo->prepare("SELECT id, nome FROM usuarios WHERE id = ? OR email = ? OR nome LIKE ? LIMIT 1");
+        $stmt = $pdo->prepare("SELECT id, nome, nivel_acesso FROM usuarios WHERE id = ? OR email = ? OR nome LIKE ? LIMIT 1");
         $stmt->execute([$termo, $termo, "%$termo%"]);
         $user = $stmt->fetch();
         if ($user) {
             if ($user['id'] == $_SESSION['usuario_id']) {
                 $response['html'] = "Você não pode rebaixar a si mesmo.";
+            } elseif ($user['nivel_acesso'] === 'ceo' && $_SESSION['nivel_acesso'] !== 'ceo') {
+                $response['html'] = "<b>Erro:</b> Você não tem permissão para rebaixar um CEO.";
             } else {
                 $pdo->prepare("UPDATE usuarios SET nivel_acesso = 'comum' WHERE id = ?")->execute([$user['id']]);
                 
