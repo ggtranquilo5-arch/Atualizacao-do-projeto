@@ -253,7 +253,7 @@ if (empty($userEmail) && isset($_SESSION['usuario_id'])) {
             }
             .main {
                 margin-left: 0;
-                padding: 24px;
+                padding: 15px;
                 padding-top: 85px;
             }
             .menu-toggle {
@@ -261,6 +261,19 @@ if (empty($userEmail) && isset($_SESSION['usuario_id'])) {
             }
             .topbar {
                 margin-bottom: 24px;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+                padding: 15px;
+            }
+            .topbar .usuario {
+                width: 100%;
+                flex-direction: column;
+                align-items: stretch !important;
+                gap: 10px !important;
+            }
+            .btn-logout {
+                justify-content: center;
             }
         }
         body.dark-mode { background: #0f172a; color: #f1f5f9; }
