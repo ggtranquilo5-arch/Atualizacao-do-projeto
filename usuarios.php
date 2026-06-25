@@ -92,15 +92,25 @@ if (isset($_GET['banir_usuario'])) {
     exit;
 }
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao']) && $_POST['acao'] === 'mudar_nivel') {
-    $id_usuario = (int)$_POST['usuario_id'];
-    $novo_nivel = $_POST['nivel_acesso']; 
-    if ($id_usuario !== $_SESSION['usuario_id'] && in_array($novo_nivel, ['admin', 'comum'])) {
-        $usr_nome = $pdo->query("SELECT nome FROM usuarios WHERE id = $id_usuario")->fetchColumn();
-        $stmt = $pdo->prepare("UPDATE usuarios SET nivel_acesso = ? WHERE id = ?");
-        $stmt->execute([$novo_nivel, $id_usuario]);
-        $pdo->prepare("INSERT INTO logs_atividades (usuario_id, acao, detalhes) VALUES (?, ?, ?)")
-            ->execute([$_SESSION['usuario_id'], 'Mudar Nível', "Alterou nível do ID $id_usuario (" . ($usr_nome ?: 'Desconhecido') . ") para $novo_nivel"]);
-        $_SESSION['msg_sucesso'] = "Nível de acesso alterado com sucesso!";
+    try {
+        $id_usuario = (int)$_POST['usuario_id'];
+        $novo_nivel = trim($_POST['nivel_acesso']); 
+        
+        if ($id_usuario !== $_SESSION['usuario_id'] && in_array($novo_nivel, ['admin', 'comum'])) {
+            $usr_nome = $pdo->query("SELECT nome FROM usuarios WHERE id = $id_usuario")->fetchColumn();
+            
+            $stmt = $pdo->prepare("UPDATE usuarios SET nivel_acesso = ? WHERE id = ?");
+            $stmt->execute([$novo_nivel, $id_usuario]);
+            
+            $pdo->prepare("INSERT INTO logs_atividades (usuario_id, acao, detalhes) VALUES (?, ?, ?)")
+                ->execute([$_SESSION['usuario_id'], 'Mudar Nível', "Alterou nível do ID $id_usuario (" . ($usr_nome ?: 'Desconhecido') . ") para $novo_nivel"]);
+                
+            $_SESSION['msg_sucesso'] = "Nível de acesso alterado com sucesso para $novo_nivel!";
+        } else {
+            $_SESSION['msg_erro'] = "Ação negada ou nível inválido.";
+        }
+    } catch (Exception $e) {
+        $_SESSION['msg_erro'] = "Erro ao alterar nível: " . $e->getMessage();
     }
     header("Location: usuarios.php");
     exit;
@@ -314,13 +324,16 @@ $totalAdmins = array_reduce($usuarios, function($carry, $usr) { return $carry + 
                             <form method="POST" action="usuarios.php" style="display:flex; gap:8px; align-items:center; flex-wrap: wrap;">
                                 <input type="hidden" name="acao" value="mudar_nivel">
                                 <input type="hidden" name="usuario_id" value="<?= $usr['id'] ?>">
-                                <select name="nivel_acesso" style="padding:6px; border-radius:6px; border:1px solid #cbd5e1; outline:none;" <?= $usr['id'] === $_SESSION['usuario_id'] ? 'disabled' : '' ?>>
-                                    <option value="comum" <?= $usr['nivel_acesso'] == 'comum' ? 'selected' : '' ?>>Usuário Comum</option>
-                                    <option value="admin" <?= $usr['nivel_acesso'] == 'admin' ? 'selected' : '' ?>>Administrador</option>
-                                </select>
-                                <?php if ($usr['id'] !== $_SESSION['usuario_id']): ?>
-                                    <button type="submit" style="padding:6px 12px; background:#2563eb; color:white; border:none; border-radius:6px; cursor:pointer; font-weight:bold; font-size:12px;">Salvar Cargo</button>
-                                <?php endif; ?>
+                                <div style="position: relative;">
+                                    <select name="nivel_acesso" onchange="this.parentElement.nextElementSibling?.remove(); this.form.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));" style="padding:6px 12px; border-radius:6px; border:1px solid <?= $usr['nivel_acesso'] == 'admin' ? '#3b82f6' : '#cbd5e1' ?>; outline:none; background: <?= $usr['nivel_acesso'] == 'admin' ? '#eff6ff' : '#f8fafc' ?>; color: <?= $usr['nivel_acesso'] == 'admin' ? '#1e3a8a' : '#334155' ?>; font-weight: 500; cursor: pointer; transition: 0.2s;" <?= $usr['id'] === $_SESSION['usuario_id'] ? 'disabled' : '' ?>>
+                                        <option value="comum" <?= $usr['nivel_acesso'] == 'comum' ? 'selected' : '' ?>>Usuário Comum</option>
+                                        <option value="admin" <?= $usr['nivel_acesso'] == 'admin' ? 'selected' : '' ?>>Administrador</option>
+                                    </select>
+                                    <?php if ($usr['id'] !== $_SESSION['usuario_id']): ?>
+                                        <i class="fa fa-caret-down" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); pointer-events: none; color: #64748b;"></i>
+                                    <?php endif; ?>
+                                </div>
+                                <?php /* Botão Salvar Cargo removido para otimização (Auto-Save no onchange) */ ?>
                             </form>
                         </td>
                         <td style="display: flex; gap: 8px; flex-wrap:wrap;">
