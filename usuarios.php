@@ -369,12 +369,16 @@ $totalAdmins = array_reduce($usuarios, function($carry, $usr) { return $carry + 
                                 <span style="color:#d97706; font-size:13px; font-weight: bold; padding: 6px 12px; background: rgba(217, 119, 6, 0.1); border-radius: 6px;"><i class="fa fa-shield-alt"></i> Protegido</span>
                             <?php else: ?>
                                 <button onclick='abrirModalEdit(<?= json_encode($usr) ?>)' style="color:#0ea5e9; font-weight:bold; font-size: 13px; display:inline-block; padding: 6px 12px; background: #e0f2fe; border-radius: 6px;"><i class="fa fa-pen"></i> Editar</button>
-                                <?php if($usr['status'] === 'banido'): ?>
-                                    <a href="usuarios.php?banir_usuario=<?= $usr['id'] ?>&status=banido" style="color:#10b981; text-decoration:none; font-weight:bold; font-size: 13px; display:inline-block; padding: 6px 12px; background: #d1fae5; border-radius: 6px;"><i class="fa fa-unlock"></i> Desbanir</a>
+                                <?php if ($usr['id'] !== $_SESSION['usuario_id']): ?>
+                                    <?php if($usr['status'] === 'banido'): ?>
+                                        <a href="usuarios.php?banir_usuario=<?= $usr['id'] ?>&status=banido" style="color:#10b981; text-decoration:none; font-weight:bold; font-size: 13px; display:inline-block; padding: 6px 12px; background: #d1fae5; border-radius: 6px;"><i class="fa fa-unlock"></i> Desbanir</a>
+                                    <?php else: ?>
+                                        <a href="usuarios.php?banir_usuario=<?= $usr['id'] ?>&status=ativo" onclick="return confirm('Deseja banir <?= htmlspecialchars($usr['nome']) ?>?');" style="color:#f59e0b; text-decoration:none; font-weight:bold; font-size: 13px; display:inline-block; padding: 6px 12px; background: #fef3c7; border-radius: 6px;"><i class="fa fa-ban"></i> Banir</a>
+                                    <?php endif; ?>
+                                    <a href="usuarios.php?excluir_usuario=<?= $usr['id'] ?>" onclick="return confirm('Deseja realmente excluir <?= htmlspecialchars($usr['nome']) ?> permanentemente?');" style="color:#ef4444; text-decoration:none; font-weight:bold; font-size: 13px; display:inline-block; padding: 6px 12px; background: #fef2f2; border-radius: 6px;"><i class="fa fa-trash"></i> Excluir</a>
                                 <?php else: ?>
-                                    <a href="usuarios.php?banir_usuario=<?= $usr['id'] ?>&status=ativo" onclick="return confirm('Deseja banir <?= htmlspecialchars($usr['nome']) ?>?');" style="color:#f59e0b; text-decoration:none; font-weight:bold; font-size: 13px; display:inline-block; padding: 6px 12px; background: #fef3c7; border-radius: 6px;"><i class="fa fa-ban"></i> Banir</a>
+                                    <span style="color:#64748b; font-size:13px; font-style:italic; padding: 6px 12px;">(Sua conta)</span>
                                 <?php endif; ?>
-                                <a href="usuarios.php?excluir_usuario=<?= $usr['id'] ?>" onclick="return confirm('Deseja realmente excluir <?= htmlspecialchars($usr['nome']) ?> permanentemente?');" style="color:#ef4444; text-decoration:none; font-weight:bold; font-size: 13px; display:inline-block; padding: 6px 12px; background: #fef2f2; border-radius: 6px;"><i class="fa fa-trash"></i> Excluir</a>
                             <?php endif; ?>
                         </td>
                     </tr>

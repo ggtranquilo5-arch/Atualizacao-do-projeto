@@ -319,12 +319,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     }
 }
 
-if (isset($_SESSION['nivel_acesso']) && $_SESSION['nivel_acesso'] === 'admin') {
-    $stmtComandos = $pdo->query("SELECT comando as cmd, descricao as `desc`, icone as icon, cor FROM ia_comandos ORDER BY comando ASC");
-} else {
-    $stmtComandos = $pdo->query("SELECT comando as cmd, descricao as `desc`, icone as icon, cor FROM ia_comandos WHERE nivel_acesso = 'comum' ORDER BY comando ASC");
+try {
+    if (isset($_SESSION['nivel_acesso']) && in_array($_SESSION['nivel_acesso'], ['admin', 'ceo'])) {
+        $stmtComandos = $pdo->query("SELECT comando as cmd, descricao as `desc`, icone as icon, cor FROM ia_comandos ORDER BY comando ASC");
+    } else {
+        $stmtComandos = $pdo->query("SELECT comando as cmd, descricao as `desc`, icone as icon, cor FROM ia_comandos WHERE nivel_acesso = 'comum' ORDER BY comando ASC");
+    }
+    $comandos_db = $stmtComandos->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    // A tabela não existe no servidor! Vamos forçar a criação.
+    ob_start();
+    include_once 'setup_comandos.php';
+    ob_end_clean();
+    
+    // Tenta de novo após criar
+    if (isset($_SESSION['nivel_acesso']) && in_array($_SESSION['nivel_acesso'], ['admin', 'ceo'])) {
+        $stmtComandos = $pdo->query("SELECT comando as cmd, descricao as `desc`, icone as icon, cor FROM ia_comandos ORDER BY comando ASC");
+    } else {
+        $stmtComandos = $pdo->query("SELECT comando as cmd, descricao as `desc`, icone as icon, cor FROM ia_comandos WHERE nivel_acesso = 'comum' ORDER BY comando ASC");
+    }
+    $comandos_db = $stmtComandos->fetchAll(PDO::FETCH_ASSOC);
 }
-$comandos_db = $stmtComandos->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">

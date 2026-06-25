@@ -1,5 +1,5 @@
 <?php
-require 'db.php';
+require_once 'db.php';
 
 try {
     $pdo->exec("CREATE TABLE IF NOT EXISTS ia_comandos (

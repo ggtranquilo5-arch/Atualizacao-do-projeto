@@ -1,8 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Interceptar formulários POST (Adicionar/Editar)
     document.addEventListener('submit', async (e) => {
         if (e.target.tagName === 'FORM' && e.target.method.toUpperCase() === 'POST') {
-            // Ignorar forms que possuam atributo data-no-ajax ou que sejam de login
             if (e.target.hasAttribute('data-no-ajax') || window.location.href.includes('index.php') || window.location.href.includes('configuracoes.php')) {
                 return;
             }
@@ -18,7 +16,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             try {
-                // Enviar os dados POST e capturar a resposta diretamente (o PHP redireciona e o fetch segue automaticamente, retornando a página atualizada com a toast)
                 const response = await fetch(e.target.action || window.location.href, {
                     method: 'POST',
                     body: formData
@@ -28,21 +25,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 const parser = new DOMParser();
                 const newDoc = parser.parseFromString(htmlText, 'text/html');
 
-                // Substituir a tabela
                 const newTable = newDoc.querySelector('.table-container');
                 const oldTable = document.querySelector('.table-container');
                 if (newTable && oldTable) {
                     oldTable.innerHTML = newTable.innerHTML;
                 }
 
-                // Substituir cards (se houver atualização de números)
                 const newCards = newDoc.querySelector('.cards');
                 const oldCards = document.querySelector('.cards');
                 if (newCards && oldCards) {
                     oldCards.innerHTML = newCards.innerHTML;
                 }
 
-                // Exibir Toast animado de Sucesso (agora captura a toast real do PHP)
                 const newToast = newDoc.querySelector('.toast');
                 let toastContainer = document.querySelector('.toast-container');
                 if (!toastContainer) {
@@ -56,16 +50,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     toastContainer.innerHTML = '<div class="toast sucesso"><i class="fa fa-check-circle"></i> Ação concluída com sucesso!</div>';
                 }
 
-                // Limpar formulário se for "adicionar"
                 const acaoInput = e.target.querySelector('input[name="acao"]');
                 if (acaoInput && acaoInput.value !== 'editar') {
                     e.target.reset();
                 }
 
-                // Fechar modais ativos
                 document.querySelectorAll('.modal-overlay.active').forEach(m => m.classList.remove('active'));
 
-                // Voltar topo form
                 if (document.querySelector('.form-container h2') && document.querySelector('input[name="acao"]')) {
                     document.querySelector('.form-container h2').innerText = "Cadastrar Novo";
                     if (document.querySelector('.form-container button')) document.querySelector('.form-container button').innerText = "Adicionar";
@@ -90,7 +81,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Interceptar links de exclusão/banir/ações diretas
     document.addEventListener('click', async (e) => {
         const link = e.target.closest('a');
         if (link && link.href && !link.href.includes('javascript:') && !link.href.includes('#')) {
@@ -100,7 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 link.href.includes('redefinir_senha=');
 
             if (isActionLink) {
-                if (e.defaultPrevented) return; // Confirmação foi cancelada pelo usuário (onclick inline confirm return false)
+                if (e.defaultPrevented) return;
 
                 e.preventDefault();
                 const icon = link.querySelector('i') ? link.querySelector('i').className : '';
@@ -108,10 +98,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 link.style.pointerEvents = 'none';
 
                 try {
-                    // Executar ação via GET
                     await fetch(link.href);
 
-                    // Buscar a página atualizada ignorando o cache
                     const url = new URL(window.location.href);
                     url.searchParams.set('_t', new Date().getTime());
                     const updatedPageRes = await fetch(url.toString(), { cache: 'no-store' });
@@ -119,7 +107,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     const parser = new DOMParser();
                     const newDoc = parser.parseFromString(htmlText, 'text/html');
 
-                    // Atualizar tabela e cards
                     const newTable = newDoc.querySelector('.table-container');
                     const oldTable = document.querySelector('.table-container');
                     if (newTable && oldTable) oldTable.innerHTML = newTable.innerHTML;
@@ -128,7 +115,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     const oldCards = document.querySelector('.cards');
                     if (newCards && oldCards) oldCards.innerHTML = newCards.innerHTML;
 
-                    // Mostrar notificação
                     const newToast = newDoc.querySelector('.toast');
                     let toastContainer = document.querySelector('.toast-container');
                     if (!toastContainer) {
@@ -150,12 +136,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // ==========================================
-    // SISTEMA DE SINCRONIZAÇÃO EM TEMPO REAL (LIVE SYNC)
-    // Atualiza a tela de todos os dispositivos simultaneamente
-    // ==========================================
-
-    // Indicador visual de Live
     const topbar = document.querySelector('.topbar');
     const titleH1 = topbar ? topbar.querySelector('h1') : null;
     if (titleH1 && !document.getElementById('live-indicator')) {
@@ -182,17 +162,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     setInterval(async () => {
-        // Pausa a sincronização se a aba do navegador estiver oculta
         if (document.hidden) return;
 
         try {
-            // Busca a versão mais recente do banco de dados ignorando o CACHE do navegador
             const url = new URL(window.location.href);
-            url.searchParams.set('_t', new Date().getTime()); // Força requisição nova
+            url.searchParams.set('_t', new Date().getTime()); 
             url.searchParams.set('live_sync', '1');
 
             const res = await fetch(url.toString(), { cache: 'no-store' });
-            if (!res.ok) return; // Se o servidor bloquear, aborta silenciosamente
+            if (!res.ok) return; 
 
             const htmlText = await res.text();
             const parser = new DOMParser();
@@ -200,7 +178,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
             let hasChanges = false;
 
-            // Função para trocar o HTML apenas se houver diferença
             const syncElement = (selector) => {
                 const oldEl = document.querySelector(selector);
                 const newEl = newDoc.querySelector(selector);
@@ -210,12 +187,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             };
 
-            // Sincronizar todos os elementos reativos do sistema
-            syncElement('.table-container tbody'); // Atualiza linhas da tabela
-            syncElement('.cards'); // Atualiza contadores numéricos
-            syncElement('.activity'); // Atualiza apenas o histórico, preservando o gráfico
-            syncElement('.sidebar .menu'); // Atualiza os menus disponíveis
-            syncElement('.topbar'); // Atualiza toda a barra superior (perfil, botão sair, etc)
+            syncElement('.table-container tbody'); 
+            syncElement('.cards'); 
+            syncElement('.activity'); 
+            syncElement('.sidebar .menu'); 
+            syncElement('.topbar'); 
 
             if (hasChanges) {
                 let toastContainer = document.querySelector('.toast-container');
@@ -232,7 +208,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
         } catch (e) {
-            // Erros de rede são ignorados no modo silencioso
         }
-    }, 5000); // Sincroniza a cada 5 segundos
+    }, 5000); 
 });
