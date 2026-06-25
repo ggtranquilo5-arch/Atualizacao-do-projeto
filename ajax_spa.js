@@ -214,7 +214,8 @@ document.addEventListener('DOMContentLoaded', () => {
             syncElement('.table-container tbody'); // Atualiza linhas da tabela
             syncElement('.cards'); // Atualiza contadores numéricos
             syncElement('.activity'); // Atualiza apenas o histórico, preservando o gráfico
-            syncElement('.chat-messages'); // Atualiza chat da IA
+            syncElement('.sidebar .menu'); // Atualiza os menus disponíveis
+            syncElement('.topbar .usuario'); // Atualiza o perfil logado no dashboard
 
             if (hasChanges) {
                 let toastContainer = document.querySelector('.toast-container');

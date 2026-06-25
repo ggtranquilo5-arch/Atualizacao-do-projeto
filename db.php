@@ -36,5 +36,28 @@ if (isset($_SESSION['usuario_id'])) {
         exit;
     }
     $_SESSION['ultima_atividade'] = time();
+
+    // Sincronização em Tempo Real do Nível de Acesso
+    try {
+        $check = $pdo->prepare("SELECT status, nivel_acesso FROM usuarios WHERE id = ?");
+        $check->execute([$_SESSION['usuario_id']]);
+        $user_db = $check->fetch();
+        if ($user_db) {
+            if ($user_db['status'] === 'banido') {
+                session_unset();
+                session_destroy();
+                header("Location: index.php?erro=" . urlencode("Sua conta foi banida."));
+                exit;
+            }
+            if (isset($_SESSION['nivel_acesso']) && $_SESSION['nivel_acesso'] !== $user_db['nivel_acesso']) {
+                $_SESSION['nivel_acesso'] = $user_db['nivel_acesso'];
+            }
+        } else {
+            session_unset();
+            session_destroy();
+            header("Location: index.php");
+            exit;
+        }
+    } catch (PDOException $e) {}
 }
 ?>
