@@ -13,6 +13,14 @@ $stmt = $pdo->query("SELECT COALESCE(SUM(quantidade), 0) FROM produtos");
 $totalEstoque = $stmt->fetchColumn();
 $stmt = $pdo->query("SELECT id, nome, quantidade, status FROM produtos ORDER BY id DESC LIMIT 5");
 $ultimosProdutos = $stmt->fetchAll();
+
+$userEmail = $_SESSION['usuario_email'] ?? '';
+if (empty($userEmail) && isset($_SESSION['usuario_id'])) {
+    $stmt = $pdo->prepare("SELECT email FROM usuarios WHERE id = ?");
+    $stmt->execute([$_SESSION['usuario_id']]);
+    $userEmail = $stmt->fetchColumn() ?: '';
+    $_SESSION['usuario_email'] = $userEmail;
+}
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -309,7 +317,7 @@ $ultimosProdutos = $stmt->fetchAll();
             <li><a href="produtos.php"><i class="fa fa-box"></i> Produtos</a></li>
             <li><a href="estoque.php"><i class="fa fa-warehouse"></i> Estoque</a></li>
             <li><a href="fornecedores.php"><i class="fa fa-truck"></i> Fornecedores</a></li>
-            <?php if (isset($_SESSION['nivel_acesso']) && $_SESSION['nivel_acesso'] === 'admin'): ?>
+            <?php if (isset($_SESSION['nivel_acesso']) && in_array($_SESSION['nivel_acesso'], ['admin', 'ceo'])): ?>
             <li><a href="usuarios.php"><i class="fa fa-users"></i> Usuários</a></li>
             <li><a href="relatorios.php"><i class="fa fa-file-alt"></i> Relatórios</a></li>
             <li><a href="configuracoes.php"><i class="fa fa-cog"></i> Configurações</a></li>
@@ -318,8 +326,28 @@ $ultimosProdutos = $stmt->fetchAll();
     </aside>
     <main class="main">
         <header class="topbar">
-            <h1>Olá, <?= htmlspecialchars($_SESSION['usuario_nome']) ?> <?= (isset($_SESSION['nivel_acesso']) && $_SESSION['nivel_acesso'] === 'admin') ? '<span style="font-size: 14px; background: #2563eb; color: white; padding: 4px 8px; border-radius: 4px; vertical-align: middle;">ADMIN</span>' : '' ?> 👋</h1>
-            <a href="logout.php" class="btn-logout"><i class="fa fa-sign-out-alt"></i> Sair</a>
+            <h1>Início</h1>
+            <div class="usuario" style="display:flex; align-items:center; gap: 15px;">
+                <div style="background: rgba(37,99,235,0.05); padding: 12px 18px; border-radius: 8px; border: 1px solid rgba(37,99,235,0.2);">
+                    <strong style="font-size: 1.1rem; display: block; color: var(--text-color); margin-bottom: 4px;"><?= htmlspecialchars($_SESSION['usuario_nome']) ?></strong>
+                    <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 2px;">
+                        <i class="fa fa-envelope" style="font-size: 0.8rem; margin-right: 4px;"></i> <?= htmlspecialchars($userEmail ?: 'Sem e-mail') ?>
+                    </p>
+                    <p style="color: var(--text-muted); font-size: 0.9rem;">
+                        <i class="fa fa-id-badge" style="font-size: 0.8rem; margin-right: 4px;"></i> Almoxarifado Central 
+                        <?php if (isset($_SESSION['nivel_acesso'])): ?>
+                            <?php if ($_SESSION['nivel_acesso'] === 'ceo'): ?>
+                                <span style="color:#d97706;font-weight:bold;margin-left:5px;text-shadow: 0 0 5px rgba(217,119,6,0.3);">[CEO / Owner]</span>
+                            <?php elseif ($_SESSION['nivel_acesso'] === 'admin'): ?>
+                                <span style="color:var(--primary-color);font-weight:bold;margin-left:5px;">[Admin]</span>
+                            <?php else: ?>
+                                <span style="color:#10b981;font-weight:bold;margin-left:5px;">[Comum]</span>
+                            <?php endif; ?>
+                        <?php endif; ?>
+                    </p>
+                </div>
+                <a href="logout.php" class="btn-logout"><i class="fa fa-sign-out-alt"></i> Sair</a>
+            </div>
         </header>
         <section class="cards">
             <div class="card">

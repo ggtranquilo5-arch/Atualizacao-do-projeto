@@ -2,7 +2,7 @@
 session_start();
 require 'db.php';
 if (isset($_SESSION['usuario_id'])) {
-    header("Location: dashboard.php");
+    header("Location: telainicial.php");
     exit;
 }
 $erro = '';
@@ -10,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao']) && $_POST['ac
     $email = trim($_POST['email']);
     $senha = $_POST['senha'];
     if (!empty($email) && !empty($senha)) {
-        $stmt = $pdo->prepare("SELECT id, nome, senha, nivel_acesso, status FROM usuarios WHERE email = ?");
+        $stmt = $pdo->prepare("SELECT id, nome, email, senha, nivel_acesso, status FROM usuarios WHERE email = ?");
         $stmt->execute([$email]);
         $usuario = $stmt->fetch();
         if ($usuario && password_verify($senha, $usuario['senha'])) {
@@ -19,9 +19,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao']) && $_POST['ac
             } else {
                 $_SESSION['usuario_id'] = $usuario['id'];
                 $_SESSION['usuario_nome'] = $usuario['nome'];
+                $_SESSION['usuario_email'] = $usuario['email'];
                 $_SESSION['nivel_acesso'] = $usuario['nivel_acesso'];
                 $_SESSION['ultima_atividade'] = time();
-                header("Location: dashboard.php");
+                header("Location: telainicial.php");
                 exit;
             }
         } else {
