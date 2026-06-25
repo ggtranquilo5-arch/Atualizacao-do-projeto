@@ -18,27 +18,23 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             try {
-                // Enviar os dados POST
-                await fetch(e.target.action || window.location.href, {
+                // Enviar os dados POST e capturar a resposta diretamente (o PHP redireciona e o fetch segue automaticamente, retornando a página atualizada com a toast)
+                const response = await fetch(e.target.action || window.location.href, {
                     method: 'POST',
                     body: formData
                 });
-
-                // Buscar a mesma página atualizada silenciosamente ignorando o cache
-                const url = new URL(window.location.href);
-                url.searchParams.set('_t', new Date().getTime());
-                const updatedPageRes = await fetch(url.toString(), { cache: 'no-store' });
-                const htmlText = await updatedPageRes.text();
+                
+                const htmlText = await response.text();
                 const parser = new DOMParser();
                 const newDoc = parser.parseFromString(htmlText, 'text/html');
-
+                
                 // Substituir a tabela
                 const newTable = newDoc.querySelector('.table-container');
                 const oldTable = document.querySelector('.table-container');
                 if (newTable && oldTable) {
                     oldTable.innerHTML = newTable.innerHTML;
                 }
-
+                
                 // Substituir cards (se houver atualização de números)
                 const newCards = newDoc.querySelector('.cards');
                 const oldCards = document.querySelector('.cards');
@@ -46,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     oldCards.innerHTML = newCards.innerHTML;
                 }
 
-                // Exibir Toast animado de Sucesso
+                // Exibir Toast animado de Sucesso (agora captura a toast real do PHP)
                 const newToast = newDoc.querySelector('.toast');
                 let toastContainer = document.querySelector('.toast-container');
                 if (!toastContainer) {
