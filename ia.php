@@ -367,16 +367,17 @@ try {
             font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         .sidebar {
-            width: 250px;
+            width: 260px;
             background: #1e1f20;
             padding: 20px;
             border-right: 1px solid rgba(255,255,255,0.05);
-            z-index: 10;
+            z-index: 10001;
             position: fixed;
             top: 0;
             left: 0;
             height: 100vh;
             overflow-y: auto;
+            box-sizing: border-box;
         }
         .logo { text-align: center; margin-bottom: 40px; }
         .logo h2 { color: #a8c7fa; font-weight: 800; letter-spacing: 2px; }
@@ -613,6 +614,74 @@ try {
         .suggestion-desc {
             color: #b5bac1;
             font-size: 0.85rem;
+        }
+        
+        /* OTIMIZAÇÕES MOBILE EXCLUSIVAS PARA O CHAT */
+        @media (max-width: 768px) {
+            body {
+                display: block !important;
+            }
+            .sidebar {
+                left: -320px !important;
+                width: 260px !important;
+                box-sizing: border-box !important;
+                transition: left 0.3s ease !important;
+            }
+            .sidebar.active {
+                left: 0 !important;
+            }
+            .main {
+                padding: 15px !important;
+                padding-top: 70px !important;
+                margin: 0 !important;
+                width: 100% !important;
+                max-width: 100vw !important;
+                box-sizing: border-box !important;
+            }
+            .header-ia {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            .header-ia h1 {
+                font-size: 1.5rem !important;
+            }
+            .ai-chat-section {
+                margin-top: 15px !important;
+                min-height: calc(100vh - 160px) !important;
+            }
+            .chat-messages {
+                padding: 15px !important;
+                gap: 15px !important;
+            }
+            .message-wrapper {
+                max-width: 95% !important;
+            }
+            .message {
+                padding: 10px 15px !important;
+                font-size: 0.95rem !important;
+            }
+            .chat-input-area {
+                padding: 12px 15px !important;
+                gap: 10px !important;
+            }
+            .menu-toggle {
+                display: flex !important;
+                position: fixed !important;
+                top: 15px !important;
+                left: 15px !important;
+                z-index: 10002 !important;
+                background: #2563eb !important;
+                color: white !important;
+                border: none !important;
+                width: 45px !important;
+                height: 45px !important;
+                border-radius: 8px !important;
+                align-items: center !important;
+                justify-content: center !important;
+                font-size: 20px !important;
+                cursor: pointer !important;
+            }
         }
     </style>
 </head>
