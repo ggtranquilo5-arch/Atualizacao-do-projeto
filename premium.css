@@ -249,6 +249,22 @@ body.dark-mode ::-webkit-scrollbar-thumb:hover {
 }
 
 /* ========================================================
+   OTIMIZAÇÃO DESKTOP (PC E TELAS GRANDES)
+   ======================================================== */
+@media (min-width: 769px) {
+    .menu-toggle {
+        display: none !important;
+    }
+    .sidebar {
+        left: 0 !important;
+    }
+    .main {
+        margin-left: 260px !important;
+        width: calc(100% - 260px) !important;
+    }
+}
+
+/* ========================================================
    OTIMIZAÇÃO MOBILE (SMARTPHONES E TELAS PEQUENAS)
    ======================================================== */
 html,
