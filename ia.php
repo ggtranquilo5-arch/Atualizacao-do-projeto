@@ -365,7 +365,6 @@ try {
             min-height: 100vh;
             overflow-x: hidden;
             font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            padding-left: 250px;
         }
         .sidebar {
             width: 250px;
@@ -618,6 +617,7 @@ try {
     </style>
 </head>
 <body>
+    <button class="menu-toggle" onclick="toggleMenu()"><i class="fa fa-bars"></i></button>
     <aside class="sidebar">
         <div class="logo"><h2>ALMOX</h2></div>
         <ul class="menu">
@@ -893,6 +893,10 @@ try {
             }
 
             return `Comando "<b>${perguntaOriginal}</b>" incorreto ou com parâmetros faltando. Digite <b>/ajuda</b>.`;
+        }
+
+        function toggleMenu() {
+            document.querySelector('.sidebar').classList.toggle('active');
         }
     </script>
 <script src="ajax_spa.js?v=<?= time() ?>"></script></body>
