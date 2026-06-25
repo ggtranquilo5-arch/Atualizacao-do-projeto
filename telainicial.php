@@ -329,11 +329,11 @@ if (empty($userEmail) && isset($_SESSION['usuario_id'])) {
             <h1>Início</h1>
             <div class="usuario" style="display:flex; align-items:center; gap: 15px;">
                 <div style="background: rgba(37,99,235,0.05); padding: 12px 18px; border-radius: 8px; border: 1px solid rgba(37,99,235,0.2);">
-                    <strong style="font-size: 1.1rem; display: block; color: var(--text-color); margin-bottom: 4px;"><?= htmlspecialchars($_SESSION['usuario_nome']) ?></strong>
-                    <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 2px;">
+                    <strong style="font-size: 1.1rem; display: block; margin-bottom: 4px;"><?= htmlspecialchars($_SESSION['usuario_nome']) ?></strong>
+                    <p style="font-size: 0.9rem; margin-bottom: 2px; opacity: 0.8;">
                         <i class="fa fa-envelope" style="font-size: 0.8rem; margin-right: 4px;"></i> <?= htmlspecialchars($userEmail ?: 'Sem e-mail') ?>
                     </p>
-                    <p style="color: var(--text-muted); font-size: 0.9rem;">
+                    <p style="font-size: 0.9rem; opacity: 0.8;">
                         <i class="fa fa-id-badge" style="font-size: 0.8rem; margin-right: 4px;"></i> Almoxarifado Central 
                         <?php if (isset($_SESSION['nivel_acesso'])): ?>
                             <?php if ($_SESSION['nivel_acesso'] === 'ceo'): ?>
