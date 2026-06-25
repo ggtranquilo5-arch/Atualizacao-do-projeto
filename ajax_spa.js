@@ -23,18 +23,18 @@ document.addEventListener('DOMContentLoaded', () => {
                     method: 'POST',
                     body: formData
                 });
-                
+
                 const htmlText = await response.text();
                 const parser = new DOMParser();
                 const newDoc = parser.parseFromString(htmlText, 'text/html');
-                
+
                 // Substituir a tabela
                 const newTable = newDoc.querySelector('.table-container');
                 const oldTable = document.querySelector('.table-container');
                 if (newTable && oldTable) {
                     oldTable.innerHTML = newTable.innerHTML;
                 }
-                
+
                 // Substituir cards (se houver atualização de números)
                 const newCards = newDoc.querySelector('.cards');
                 const oldCards = document.querySelector('.cards');
